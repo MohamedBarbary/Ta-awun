@@ -35,7 +35,8 @@ document
       passwordConfirm: confirmPassword,
     };
     console.log(formData);
-    const apiUrl = 'http://127.0.0.1:4001/api/users/resetPassword/';
+    const apiUrl =
+      'https://social-api-production-6bd9.up.railway.app/api/users/resetPassword/';
     console.log(apiUrl + token);
     fetch(apiUrl + token, {
       method: 'POST',
