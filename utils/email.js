@@ -18,14 +18,14 @@ exports.sendMail = catchAsyncError(async (receiver, mailHtml, subject) => {
   const mailGenerator = new mailgen({
     theme: 'default',
     product: {
-      name: 'NoteApp',
-      link: 'NoteApp.com',
+      name: 'Taawun',
+      link: 'Taawun.com',
     },
   });
   const response = {
     body: {
       name: 'welcome',
-      intro: 'welcome to NoteApp Api !',
+      intro: 'welcome to Taawun!',
       table: {
         data: [
           {
