@@ -23,22 +23,18 @@ document
       return;
     }
 
-    // Get the token from the URL
     const token = extractTokenFromUrl();
 
     if (!token) {
-      // Token not found, handle this case (e.g., show an error message)
       console.error('Token not found in the URL');
       return;
     }
 
-    // Data to be sent to the API
     const formData = {
       password: newPassword,
       passwordConfirm: confirmPassword,
     };
     console.log(formData);
-    // Replace 'YOUR_API_ENDPOINT' with your actual API endpoint
     const apiUrl = 'http://127.0.0.1:4001/api/users/resetPassword/';
     console.log(apiUrl + token);
     fetch(apiUrl + token, {

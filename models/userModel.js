@@ -62,22 +62,14 @@ const userSchema = new mongoose.Schema(
       type: {
         type: String,
         enum: ['Point'],
-        required: true,
+        required: false,
       },
       coordinates: {
         type: [Number],
-        required: true,
+        required: false,
       },
     },
     age: Number,
-    followers: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
-    following: {
-      type: Schema.Types.ObjectId,
-      ref: 'User',
-    },
     passwordResetToken: String,
     passwordResetExpires: Date,
   },
