@@ -1,7 +1,12 @@
 const Comment = require('../models/commentModel');
-const Factory = require('./handleFactory');
-exports.createComment = Factory.createOne(Comment);
-exports.getAllComments = Factory.getAll(Comment);
-exports.getComment = Factory.getOne(Comment);
-exports.updateComment = Factory.updateOne(Comment);
-exports.deleteComment = Factory.deleteOne(Comment);
+const controllersBuilder = require('./controllersBuilder');
+exports.createComment = controllersBuilder.createOne(Comment);
+exports.getAllComments = controllersBuilder.getAll(Comment);
+exports.getComment = controllersBuilder.getOne(Comment);
+exports.updateComment = controllersBuilder.updateOne(Comment);
+exports.deleteComment = controllersBuilder.deleteOne(Comment);
+exports.uploadCommentPhotos = controllersBuilder.uploadPhoto(
+  'commentPhotos',
+  'comment'
+);
+exports.updateCommentPhotos = controllersBuilder.addPhotosInfo(Comment);

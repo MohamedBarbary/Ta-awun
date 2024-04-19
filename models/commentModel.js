@@ -3,12 +3,12 @@ const Schema = mongoose.Schema;
 
 const commentSchema = new mongoose.Schema(
   {
-    user: {
+    userID: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'enter name of user who writes the comment'],
     },
-    post: {
+    postID: {
       type: Schema.Types.ObjectId,
       ref: 'Post',
       required: [true, 'comment should be for certain post'],
@@ -17,6 +17,13 @@ const commentSchema = new mongoose.Schema(
       type: String,
       required: true,
       minLength: 1,
+    },
+    photos: {
+      type: [String],
+    },
+    photosLink: {
+      type: [String],
+      default: '',
     },
     replies: [this],
   },

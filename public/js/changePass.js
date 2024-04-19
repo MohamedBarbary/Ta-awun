@@ -1,7 +1,5 @@
-// change-password-script.js
 const blueParagraph = document.querySelector('.blue-paragraph');
 
-// Function to extract token from the URL
 function extractTokenFromUrl() {
   const path = window.location.pathname;
   const pathArray = path.split('/');
@@ -18,7 +16,6 @@ document
     const confirmPassword = document.getElementById('confirmPassword').value;
 
     if (newPassword !== confirmPassword) {
-      // Passwords do not match, handle this case (e.g., show an error message)
       console.error('Passwords do not match');
       return;
     }

@@ -1,4 +1,4 @@
-const User = require('./../models/userModel');
+const Organization = require('./../models/organizationModel');
 const jwt = require('jsonwebtoken');
 const emailSender = require('./../utils/email');
 const crypto = require('crypto');
@@ -11,73 +11,48 @@ const signToken = (id) => {
     expiresIn: '30d',
   });
 };
-const createSendToken = (user, statusCode, res) => {
-  const token = signToken(user._id);
-  user.password = undefined;
+const createSendToken = (organization, statusCode, res) => {
+  const token = signToken(organization._id);
+  organization.password = undefined;
   res.status(statusCode).json({
     status: 'success',
     token,
     data: {
-      user,
+      organization,
     },
   });
 };
 exports.signUp = catchAsyncError(async (req, res, next) => {
-  const user = await User.create({
-    userName: req.body.userName,
+  const organization = await Organization.create({
+    organizationName: req.body.organizationName,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-  const verificationToken = user.generateVerificationToken();
-  const url = `${req.protocol}://${req.get(
-    'host'
-  )}/api/users/verify/${verificationToken}`;
-  const html = `click <a href=${url}>here</a> to confirm your email.`;
-  await emailSender.sendMail(user.email, html, 'verify mail');
-  createSendToken(user, 201, res);
+  createSendToken(organization, 201, res);
 });
 
-exports.verify = catchAsyncError(async (req, res, next) => {
-  const token = req.params.token;
-  if (!token) {
-    return res.status(400).send({
-      message: 'Missing Token',
-    });
-  }
-  let payload = null;
-  payload = jwt.verify(token, process.env.USER_VERIFICATION_TOKEN_SECRET);
-  if (!payload) {
-    next(new AppError('link is not valid', 400));
-  }
-  const user = await User.findOne({ _id: payload.ID });
-
-  if (!user) {
-    next(new AppError('user not found', 404));
-  }
-  user.verified = true;
-  await user.save({ validateBeforeSave: false });
-  res.status(200).render('verify');
-});
 exports.login = catchAsyncError(async (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     next(new AppError('please enter email and password', 400));
   }
-  const currentUser = await User.findOne({ email }).select('+password');
+  const currentOrganization = await Organization.findOne({ email }).select(
+    '+password'
+  );
   if (
-    !currentUser ||
-    !(await currentUser.compareBcryptHashedCodes(
+    !currentOrganization ||
+    !(await currentOrganization.compareBcryptHashedCodes(
       password,
-      currentUser.password
+      currentOrganization.password
     ))
   ) {
     next(new AppError('invalid email or password', 400));
   }
-  if (!currentUser.verified) {
+  if (!currentOrganization.verified) {
     next(new AppError('please verify your email', 400));
   }
-  createSendToken(currentUser, 200, res);
+  createSendToken(currentOrganization, 200, res);
 });
 exports.protectRoutes = catchAsyncError(async (req, res, next) => {
   let token;
@@ -94,35 +69,36 @@ exports.protectRoutes = catchAsyncError(async (req, res, next) => {
     token,
     process.env.JWT_SECRET
   );
-  const currentUser = await User.findById(decodedData.id);
-  if (!currentUser) {
-    return next(new AppError('user not exist please try again ', 404));
+  const currentOrganization = await Organization.findById(decodedData.id);
+  if (!currentOrganization) {
+    return next(new AppError('organization not exist please try again ', 404));
   }
-  req.user = currentUser;
+  req.organization = currentOrganization;
   next();
 });
 exports.forgotPassword = catchAsyncError(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email });
-  if (!user) {
-    next(new AppError('no user found invalid mail', 404));
+  const organization = await Organization.findOne({ email: req.body.email });
+  if (!organization) {
+    next(new AppError('no organization found invalid mail', 404));
   }
-  if (!user.verified) {
+  if (!organization.verified) {
     next(new AppError('please verify your email', 400));
   }
-  const resetToken = user.createPasswordResetToken();
-  await user.save({ validateBeforeSave: false });
+  const resetToken = organization.createPasswordResetToken();
+  await organization.save({ validateBeforeSave: false });
+  console.log(organization.passwordResetToken);
   const url = `${req.protocol}://${req.get(
     'host'
-  )}/api/users/editPassword/${resetToken}`;
-  console.log(resetToken);
+  )}/api/organizations/editPassword/${resetToken}`;
   const html = `click <a href=${url}>here</a> to reset your password.`;
-  await emailSender.sendMail(user.email, html, 'reset password');
+  await emailSender.sendMail(organization.email, html, 'reset password');
   res.status(200).json({
     status: 'success',
     message: 'we send mail for you to verify you mail',
   });
 });
 
+// edit this for all organization and user
 exports.editPassword = catchAsyncError(async (req, res, next) => {
   res.status(200).render('resetPassword');
 });
@@ -131,18 +107,18 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
     .createHash('sha256')
     .update(req.params.token)
     .digest('hex');
-  const user = await User.findOne({
+  const organization = await Organization.findOne({
     passwordResetToken: hashedToken,
     passwordResetExpires: { $gt: Date.now() },
   });
-  if (!user) {
+  if (!organization) {
     res.status(404).render('404');
   }
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
-  user.passwordResetToken = undefined;
-  user.passwordResetExpires = undefined;
-  await user.save();
+  organization.password = req.body.password;
+  organization.passwordConfirm = req.body.passwordConfirm;
+  organization.passwordResetToken = undefined;
+  organization.passwordResetExpires = undefined;
+  await organization.save();
   res.status(200).json({
     status: 'success',
   });

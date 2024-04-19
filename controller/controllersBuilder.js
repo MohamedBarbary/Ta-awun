@@ -1,8 +1,8 @@
-const catchAsyncErrors = require('./../utils/catchAsyncErrors.js');
-const AppError = require('./../utils/appError');
-const apiFeatures = require('./../utils/apiFeatures.js');
+const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
+const AppError = require('../utils/appError.js');
+const apiFeatures = require('../utils/apiFeatures.js');
 const cloudinary = require('cloudinary').v2;
-const { storage } = require('../utils/imagesHandler');
+const { storage } = require('../utils/imagesHandler.js');
 const multer = require('multer');
 
 const getImage = (imageName) => {
@@ -14,9 +14,22 @@ const getImage = (imageName) => {
   return imageUrl;
 };
 
-exports.uploadphoto = (folderName) => {
+exports.uploadPhoto = (folderName, model) => {
   return (req, res, next) => {
-    const fileName = `user-${req.user.id}-${Date.now()}`;
+    const fileName = `${model}-${req.user.id}-${Date.now()}`;
+    const multerStorage = storage(fileName, folderName);
+    const upload = multer({ storage: multerStorage }).single('photo');
+    upload(req, res, (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to upload photo.' });
+      }
+      next();
+    });
+  };
+};
+exports.uploadPhotoOrg = (folderName, model) => {
+  return (req, res, next) => {
+    const fileName = `${model}-${req.organization.id}-${Date.now()}`;
     const multerStorage = storage(fileName, folderName);
     const upload = multer({ storage: multerStorage }).single('photo');
     upload(req, res, (err) => {
@@ -63,10 +76,7 @@ exports.getOne = (Model, popOptions) =>
     if (!doc) {
       return next(new AppError('no doc found with this id'), 404);
     }
-    if (doc.photo) {
-      doc.photoLink = getImage(doc.photo);
-      await doc.save({ validateBeforeSave: false });
-    }
+
     res.status(200).json({
       status: 'success',
       data: {
@@ -88,17 +98,37 @@ exports.createOne = (Model) =>
 
 exports.updateOne = (Model) =>
   catchAsyncErrors(async (req, res, next) => {
-    const document = await Model.findByIdAndUpdate(req.params.id, req.body, {
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
       runValidators: true,
     });
-    if (!document) {
+    if (!doc) {
       return next(new AppError('no found document with this id'), 404);
     }
     res.status(200).json({
       status: 'success',
       data: {
-        document,
+        doc,
+      },
+    });
+  });
+
+exports.addPhotosInfo = (Model) =>
+  catchAsyncErrors(async (req, res, next) => {
+    let query = Model.findById(req.params.id);
+    const doc = await query;
+    if (!doc) {
+      return next(new AppError('no found document with this id'), 404);
+    }
+    if (req.file) {
+      doc.photos.push(req.file.filename);
+      doc.photosLink.push(getImage(req.file.filename));
+      await doc.save();
+    }
+    res.status(200).json({
+      status: 'success',
+      data: {
+        doc,
       },
     });
   });

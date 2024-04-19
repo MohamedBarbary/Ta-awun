@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const Factory = require('../controller/handleFactory');
 const authController = require('./../controller/authController');
 const userController = require('../controller/userController');
 router.post('/signUp', authController.signUp);
@@ -14,7 +13,7 @@ router.get('/getMe', userController.getMe, userController.getUser);
 router.delete('/deleteMe', userController.deleteMe);
 router.patch(
   '/updateMe',
-  Factory.uploadphoto('userPhotos'),
+  userController.uploadMyPhoto,
   userController.updateMe
 );
 module.exports = router;

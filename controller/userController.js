@@ -1,21 +1,15 @@
-const multer = require('multer');
-const { storage } = require('../utils/imagesHandler');
-const catchAsyncError = require('./../utils/catchAsyncErrors');
-const Factory = require('./handleFactory');
+const catchAsyncError = require('../utils/catchAsyncErrors');
 const User = require('./../models/userModel');
+const controllersBuilder = require('../controller/controllersBuilder');
+const cloudinary = require('cloudinary').v2;
 
-exports.uploadphoto = () => {
-  return (req, res, next) => {
-    const fileName = `user-${req.user.id}-${Date.now()}`;
-    const multerStorage = storage(fileName, 'usersPhotos');
-    const upload = multer({ storage: multerStorage }).single('photo');
-    upload(req, res, (err) => {
-      if (err) {
-        return res.status(500).json({ error: 'Failed to upload photo.' });
-      }
-      next();
-    });
-  };
+const getImage = (imageName) => {
+  const imageUrl = cloudinary.url(imageName, {
+    width: 200,
+    height: 200,
+    crop: 'fill',
+  });
+  return imageUrl;
 };
 
 const filterObj = function (obj, ...allowedFields) {
@@ -36,8 +30,10 @@ exports.updateMe = catchAsyncError(async (req, res, next) => {
     return next(new AppError('you not allowed to change password here', 400));
   }
   const filteredBody = filterObj(req.body, 'userName');
-  if (req.file) filteredBody.photo = req.file.filename;
-  console.log(filteredBody);
+  if (req.file) {
+    filteredBody.photo = req.file.filename;
+    filteredBody.photoLink = getImage(req.file.filename);
+  }
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
     new: true,
     runValidator: true,
@@ -63,7 +59,8 @@ exports.createUser = (req, res) => {
     message: 'please use sign up to create new user ',
   });
 };
-exports.getAllUsers = Factory.getAll(User);
-exports.getUser = Factory.getOne(User);
-exports.updateUser = Factory.updateOne(User);
-exports.deleteUser = Factory.deleteOne(User);
+exports.uploadMyPhoto = controllersBuilder.uploadPhoto('userPhotos', 'user');
+exports.getAllUsers = controllersBuilder.getAll(User);
+exports.getUser = controllersBuilder.getOne(User);
+exports.updateUser = controllersBuilder.updateOne(User);
+exports.deleteUser = controllersBuilder.deleteOne(User);

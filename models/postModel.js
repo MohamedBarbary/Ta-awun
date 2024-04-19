@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const postSchema = new mongoose.Schema(
   {
-    user: {
+    userID: {
       type: Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'enter name of user who writes the post'],
@@ -14,13 +14,18 @@ const postSchema = new mongoose.Schema(
       minLength: 15,
     },
     likes: Number,
-    comments: Array,
-    images: [String],
+    photos: {
+      type: [String],
+    },
+    photosLink: {
+      type: [String],
+      default: '',
+    },
     category: String,
   },
   {
     timestamps: true,
   }
 );
-const Post = mongoose.model('post', postSchema);
+const Post = mongoose.model('Post', postSchema);
 module.exports = Post;

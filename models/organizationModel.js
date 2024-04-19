@@ -1,15 +1,14 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const validator = require('validator');
-const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 
-const userSchema = new mongoose.Schema(
+const organizationSchema = new mongoose.Schema(
   {
-    userName: {
+    organizationName: {
       type: String,
       required: [true, 'Please tell us your name!'],
-      minLength: 8,
+      minLength: 5,
       maxLength: 25,
     },
     email: {
@@ -41,14 +40,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    websiteLink: {
+      type: String,
+    },
     active: {
       type: Boolean,
       default: true,
       select: false,
-    },
-    gender: {
-      type: String,
-      enum: ['male', 'female', 'ذكر', 'أنثى'],
     },
     photo: {
       type: String,
@@ -57,46 +55,38 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        required: false,
-      },
-      coordinates: {
-        type: [Number],
-        required: false,
-      },
-    },
-    birthDate: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
   },
   { timestamps: true }
 );
 
-userSchema.pre('save', function (next) {
+organizationSchema.pre('save', function (next) {
   this.active = true;
   next();
 });
-userSchema.pre('save', async function (next) {
+
+organizationSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
   this.userID = undefined;
   next();
 });
-userSchema.pre(/^find/, async function (next) {
+
+organizationSchema.pre(/^find/, async function (next) {
   this.find({ active: true });
   next;
 });
-userSchema.methods.compareBcryptHashedCodes = async function (
+
+organizationSchema.methods.compareBcryptHashedCodes = async function (
   code,
   hashedCode
 ) {
   return await bcrypt.compare(code, hashedCode);
 };
-userSchema.methods.changePasswordAfter = function (JWTTimestamp) {
+
+organizationSchema.methods.changePasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
       this.passwordChangedAt.getTime() / 1000,
@@ -106,16 +96,8 @@ userSchema.methods.changePasswordAfter = function (JWTTimestamp) {
     return JWTTimestamp < changedTimestamp;
   }
 };
-userSchema.methods.generateVerificationToken = function () {
-  const user = this;
-  const verificationToken = jwt.sign(
-    { ID: user._id },
-    process.env.USER_VERIFICATION_TOKEN_SECRET,
-    { expiresIn: 1 * 60 * 60 }
-  );
-  return verificationToken;
-};
-userSchema.methods.createPasswordResetToken = function () {
+
+organizationSchema.methods.createPasswordResetToken = function () {
   const resetToken = crypto.randomBytes(32).toString('hex');
 
   this.passwordResetToken = crypto
@@ -126,5 +108,5 @@ userSchema.methods.createPasswordResetToken = function () {
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
   return resetToken;
 };
-const User = mongoose.model('User', userSchema);
-module.exports = User;
+const Organization = mongoose.model('Organization', organizationSchema);
+module.exports = Organization;

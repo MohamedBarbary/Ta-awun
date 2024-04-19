@@ -3,14 +3,23 @@ const router = express.Router();
 const authController = require('../controller/authController');
 const commentController = require('../controller/commentController');
 
+router.use(authController.protectRoutes);
+
 router
   .route('/')
-  .post(authController.protectRoutes, commentController.createComment)
-  .get(authController.protectRoutes, commentController.getAllComments);
+  .post(commentController.createComment)
+  .get(commentController.getAllComments);
+
 router
   .route('/:id')
-  .get(authController.protectRoutes, commentController.getComment)
-  .patch(authController.protectRoutes, commentController.updateComment)
-  .delete(authController.protectRoutes, commentController.deleteComment);
+  .get(commentController.getComment)
+  .patch(commentController.updateComment)
+  .delete(commentController.deleteComment);
+
+router.patch(
+  '/uploadCommentPhoto/:id',
+  commentController.uploadCommentPhotos,
+  commentController.updateCommentPhotos
+);
 
 module.exports = router;
