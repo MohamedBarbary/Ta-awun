@@ -1,8 +1,8 @@
-const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
-const AppError = require('../utils/appError.js');
-const apiFeatures = require('../utils/apiFeatures.js');
+const catchAsyncErrors = require('../../utils/catchAsyncErrors.js');
+const AppError = require('../../utils/appError.js');
+const apiFeatures = require('../../utils/apiFeatures.js');
 const cloudinary = require('cloudinary').v2;
-const { storage } = require('../utils/imagesHandler.js');
+const { storage } = require('../../utils/imagesHandler.js');
 const multer = require('multer');
 
 const getImage = (imageName) => {
@@ -14,9 +14,9 @@ const getImage = (imageName) => {
   return imageUrl;
 };
 
-exports.uploadPhoto = (folderName, model) => {
+exports.uploadPhoto = (folderName, modelName) => {
   return (req, res, next) => {
-    const fileName = `${model}-${req.user.id}-${Date.now()}`;
+    const fileName = `${modelName}-${req.model.id}-${Date.now()}`;
     const multerStorage = storage(fileName, folderName);
     const upload = multer({ storage: multerStorage }).single('photo');
     upload(req, res, (err) => {

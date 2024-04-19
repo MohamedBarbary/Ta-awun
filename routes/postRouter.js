@@ -1,10 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controller/authController');
+const userAuthController = require('../controller/authControllers/userAuthController');
 const postController = require('../controller/postController');
-const controllersBuilder = require('../controller/controllersBuilder');
 
-router.use(authController.protectRoutes);
+router.use(userAuthController.protectRoutes);
 router
   .route('/')
   .post(postController.createPost)

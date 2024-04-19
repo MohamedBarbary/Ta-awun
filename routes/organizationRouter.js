@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const organizationAuthController = require('./../controller/organizationAuthController');
+const organizationAuthController = require('../controller/authControllers/organizationAuthController');
 const organizationController = require('../controller/organizationController');
 
 router.post('/signUp', organizationAuthController.signUp);

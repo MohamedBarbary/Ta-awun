@@ -1,5 +1,5 @@
 const Post = require('../models/postModel');
-const controllersBuilder = require('./controllersBuilder');
+const controllersBuilder = require('./builders/controllersBuilder.js');
 const Comment = require('../models/commentModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const AppError = require('../utils/appError.js');

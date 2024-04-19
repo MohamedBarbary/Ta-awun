@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const authController = require('../controller/authController');
+const userAuthController = require('../controller/authControllers/userAuthController');
 const donation_requestController = require('../controller/donation_requestController');
 
-router.use(authController.protectRoutes);
+router.use(userAuthController.protectRoutes);
 router
   .route('/')
   .post(donation_requestController.createDonation_Request)

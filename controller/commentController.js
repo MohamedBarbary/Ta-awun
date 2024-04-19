@@ -1,5 +1,5 @@
 const Comment = require('../models/commentModel');
-const controllersBuilder = require('./controllersBuilder');
+const controllersBuilder = require('./builders/controllersBuilder');
 exports.createComment = controllersBuilder.createOne(Comment);
 exports.getAllComments = controllersBuilder.getAll(Comment);
 exports.getComment = controllersBuilder.getOne(Comment);
