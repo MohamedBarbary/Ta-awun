@@ -27,19 +27,6 @@ exports.uploadPhoto = (folderName, modelName) => {
     });
   };
 };
-exports.uploadPhotoOrg = (folderName, model) => {
-  return (req, res, next) => {
-    const fileName = `${model}-${req.organization.id}-${Date.now()}`;
-    const multerStorage = storage(fileName, folderName);
-    const upload = multer({ storage: multerStorage }).single('photo');
-    upload(req, res, (err) => {
-      if (err) {
-        return res.status(500).json({ error: 'Failed to upload photo.' });
-      }
-      next();
-    });
-  };
-};
 
 exports.getAll = (Model) =>
   catchAsyncErrors(async (req, res, next) => {

@@ -32,12 +32,12 @@ exports.login = (Model) =>
       !currentModel ||
       !(await currentModel.compareBcryptHashedCodes(
         password,
-        currentUser.password
+        currentModel.password
       ))
     ) {
       next(new AppError('invalid email or password', 400));
     }
-    if (!currentUser.verified) {
+    if (!currentModel.verified) {
       next(new AppError('please verify your email', 400));
     }
     createSendToken(currentModel, 200, res);
