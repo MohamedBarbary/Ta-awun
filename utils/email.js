@@ -12,7 +12,7 @@ exports.sendMail = catchAsyncError(async (receiver, mailHtml, subject) => {
       pass: process.env.App_Password,
     },
     tls: {
-      rejectUnauthorized: false, // Accept self-signed certificates (not recommended for production)
+      rejectUnauthorized: false,
     },
   });
   const mailGenerator = new mailgen({
@@ -42,11 +42,11 @@ exports.sendMail = catchAsyncError(async (receiver, mailHtml, subject) => {
   const mail = mailGenerator.generate(response);
 
   const mailOptions = {
-    from: 'mohamed <mohamedalbarbary0@gmail.com>', // sender address
-    to: receiver, // list of receivers
-    subject: subject, // Subject line
-    text: 'Hello world?', // plain text body
-    html: mail, // html body
+    from: 'mohamed <mohamedalbarbary0@gmail.com>',
+    to: receiver,
+    subject: subject,
+    text: 'Hello world?',
+    html: mail,
   };
   transporter.sendMail(mailOptions);
 });
