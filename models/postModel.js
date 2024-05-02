@@ -8,7 +8,7 @@ const postSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'enter name of user who writes the post'],
     },
-    description: {
+    content: {
       type: String,
       required: [true, 'Please add a description!'],
       minLength: 15,
