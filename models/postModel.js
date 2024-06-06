@@ -18,7 +18,6 @@ const postSchema = new mongoose.Schema(
     },
     photosLink: {
       type: [String],
-      default: '',
     },
     category: String,
   },

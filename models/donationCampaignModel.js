@@ -11,6 +11,12 @@ const donationCampaignSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Enter campaign title'],
     },
+    photos: {
+      type: [String],
+    },
+    photosLink: {
+      type: [String],
+    },
     remainingAmount: {
       type: Number,
       required: true,

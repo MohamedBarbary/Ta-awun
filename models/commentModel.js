@@ -23,7 +23,6 @@ const commentSchema = new mongoose.Schema(
     },
     photosLink: {
       type: [String],
-      default: '',
     },
     replies: [this],
   },
