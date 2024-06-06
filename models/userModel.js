@@ -37,9 +37,14 @@ const userSchema = new mongoose.Schema(
         message: 'Passwords are not the same!',
       },
     },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
     verified: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     active: {
       type: Boolean,
@@ -88,7 +93,7 @@ userSchema.pre('save', async function (next) {
 });
 userSchema.pre(/^find/, async function (next) {
   this.find({ active: true });
-  next;
+  next();
 });
 userSchema.methods.compareBcryptHashedCodes = async function (
   code,

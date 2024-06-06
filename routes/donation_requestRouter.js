@@ -4,14 +4,27 @@ const userAuthController = require('../controller/authControllers/userAuthContro
 const donation_requestController = require('../controller/donation_requestController');
 
 router.use(userAuthController.protectRoutes);
+
+router.route('/').get(donation_requestController.getAllDonation_Requests);
+router.route('/:id').get(donation_requestController.getDonation_Request);
 router
   .route('/')
-  .post(donation_requestController.createDonation_Request)
-  .get(donation_requestController.getAllDonation_Requests);
+  .post(
+    donation_requestController.isUserAuthorized,
+    donation_requestController.createDonation_Request
+  );
 router
   .route('/:id')
-  .get(donation_requestController.getDonation_Request)
-  .patch(donation_requestController.updateDonation_Request)
-  .delete(donation_requestController.deleteDonation_Request);
+  .patch(
+    donation_requestController.isUserAuthorized,
+    donation_requestController.updateDonation_Request
+  )
+  .delete(
+    donation_requestController.isUserAuthorized,
+    donation_requestController.deleteDonation_Request
+  );
 
 module.exports = router;
+
+// implement getPostDonation in my post
+// get the applier donation

@@ -14,20 +14,6 @@ const getImage = (imageName) => {
   return imageUrl;
 };
 
-exports.uploadPhoto = (folderName, modelName) => {
-  return (req, res, next) => {
-    const fileName = `${modelName}-${req.model.id}-${Date.now()}`;
-    const multerStorage = storage(fileName, folderName);
-    const upload = multer({ storage: multerStorage }).single('photo');
-    upload(req, res, (err) => {
-      if (err) {
-        return res.status(500).json({ error: 'Failed to upload photo.' });
-      }
-      next();
-    });
-  };
-};
-
 exports.getAll = (Model) =>
   catchAsyncErrors(async (req, res, next) => {
     const features = new apiFeatures(Model.find(), req.query)
@@ -44,6 +30,7 @@ exports.getAll = (Model) =>
       },
     });
   });
+
 exports.deleteOne = (Model) =>
   catchAsyncErrors(async (req, res, next) => {
     const document = await Model.findByIdAndDelete(req.params.id);
@@ -55,6 +42,7 @@ exports.deleteOne = (Model) =>
       document,
     });
   });
+
 exports.getOne = (Model, popOptions) =>
   catchAsyncErrors(async (req, res, next) => {
     let query = Model.findById(req.params.id);
@@ -99,6 +87,20 @@ exports.updateOne = (Model) =>
       },
     });
   });
+
+exports.uploadPhoto = (folderName, modelName) => {
+  return (req, res, next) => {
+    const fileName = `${modelName}-${req.model.id}-${Date.now()}`;
+    const multerStorage = storage(fileName, folderName);
+    const upload = multer({ storage: multerStorage }).single('photo');
+    upload(req, res, (err) => {
+      if (err) {
+        return res.status(500).json({ error: 'Failed to upload photo.' });
+      }
+      next();
+    });
+  };
+};
 
 exports.addPhotosInfo = (Model) =>
   catchAsyncErrors(async (req, res, next) => {

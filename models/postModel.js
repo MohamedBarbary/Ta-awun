@@ -8,9 +8,9 @@ const postSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'enter name of user who writes the post'],
     },
-    description: {
+    content: {
       type: String,
-      required: [true, 'Please add a description!'],
+      required: [true, 'Please add a content!'],
       minLength: 15,
     },
     likes: Number,
@@ -27,5 +27,6 @@ const postSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 const Post = mongoose.model('Post', postSchema);
 module.exports = Post;

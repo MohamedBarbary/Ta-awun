@@ -4,20 +4,32 @@ const userAuthController = require('../controller/authControllers/userAuthContro
 const postController = require('../controller/postController');
 
 router.use(userAuthController.protectRoutes);
+
+router.route('/').get(postController.getAllPosts);
+router.route('/:id').get(postController.getPost);
+
 router
   .route('/')
-  .post(postController.createPost)
-  .get(postController.getAllPosts);
+  .post(postController.isUserAuthorized, postController.createPost);
 router
   .route('/:id')
-  .get(postController.getPost)
-  .patch(postController.updatePost)
-  .delete(postController.deletePost);
+  .patch(postController.isUserAuthorized, postController.updatePost)
+  .delete(postController.isUserAuthorized, postController.deletePost);
 
-router.delete('/deleteMyPost/:id', postController.deleteUserPost);
+router.delete(
+  '/deleteMyPost/:id',
+  postController.isUserAuthorized,
+  postController.deleteUserPost
+);
 router.patch(
   '/uploadPostPhoto/:id',
+  postController.isUserAuthorized,
   postController.uploadPostPhotos,
   postController.updatePostPhotos
 );
+
 module.exports = router;
+
+// remove authorization from controller builder
+// implement getMy posts
+// implement admin endpoints

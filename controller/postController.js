@@ -5,17 +5,22 @@ const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const AppError = require('../utils/appError.js');
 const Donation_Request = require('../models/donation_requestModel');
 
+const popOptions = { path: 'userID', select: 'userName photoLink' };
+
 exports.createPost = controllersBuilder.createOne(Post);
 exports.getAllPosts = controllersBuilder.getAll(Post);
-exports.getPost = controllersBuilder.getOne(Post);
+exports.getPost = controllersBuilder.getOne(Post, popOptions);
+
 exports.updatePost = controllersBuilder.updateOne(Post);
 exports.deletePost = controllersBuilder.deleteOne(Post);
+
 exports.uploadPostPhotos = controllersBuilder.uploadPhoto('postPhotos', 'post');
 exports.updatePostPhotos = controllersBuilder.addPhotosInfo(Post);
+
 exports.deleteUserPost = catchAsyncErrors(async (req, res, next) => {
   const post = await Post.findByIdAndDelete(req.params.id);
   if (!post) {
-    new AppError('no document found with this data');
+    next(new AppError('no document found with this data'));
   }
   await Comment.deleteMany({ postID: req.params.id });
   await Donation_Request.deleteMany({ postID: req.params.id });
@@ -23,4 +28,26 @@ exports.deleteUserPost = catchAsyncErrors(async (req, res, next) => {
     status: 'success',
     post,
   });
+});
+
+const createAuthorization = (req, next) => {
+  if (req.method === 'POST' && req.model.id === req.body.userID) return next();
+  else if (req.method === 'POST' && req.model.id !== req.body.userID)
+    return next(
+      new AppError('You do not have permission to perform this action', 403)
+    );
+};
+exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
+  if (req.model.role === 'admin') return next();
+  createAuthorization(req, next);
+
+  const post = await Post.findById(req.params.id);
+  if (!post) return next(new AppError('no post found with this id'), 404);
+
+  if (req.model.id === post.userID.toString()) {
+    return next();
+  } else
+    return next(
+      new AppError('You do not have permission to perform this action', 403)
+    );
 });

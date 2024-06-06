@@ -5,21 +5,27 @@ const commentController = require('../controller/commentController');
 
 router.use(userAuthController.protectRoutes);
 
+router.route('/').get(commentController.getAllComments);
+router.route('/:id').get(commentController.getComment);
+
 router
   .route('/')
-  .post(commentController.createComment)
-  .get(commentController.getAllComments);
+  .post(commentController.isUserAuthorized, commentController.createComment);
 
 router
   .route('/:id')
-  .get(commentController.getComment)
-  .patch(commentController.updateComment)
-  .delete(commentController.deleteComment);
+  .patch(commentController.isUserAuthorized, commentController.updateComment)
+  .delete(commentController.isUserAuthorized, commentController.deleteComment);
 
 router.patch(
   '/uploadCommentPhoto/:id',
+  commentController.isUserAuthorized,
   commentController.uploadCommentPhotos,
   commentController.updateCommentPhotos
 );
 
 module.exports = router;
+
+// remove authorization from controller builder
+// implement admin endpoints
+// get comments of post

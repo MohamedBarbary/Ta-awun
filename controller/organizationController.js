@@ -16,8 +16,8 @@ exports.uploadMyOrganizationPhoto = controllersBuilder.uploadPhoto(
   'organizationPhotos',
   'organization'
 );
-exports.updateMyOrganization = clientControllerBuilder.updateMe(Organization);
-exports.deleteMyOrganization = clientControllerBuilder.deleteMe(Organization);
+exports.updateMyOrg = clientControllerBuilder.updateMe(Organization);
+exports.deleteMyOrg = clientControllerBuilder.deleteMe(Organization);
 exports.getAllOrganizations = controllersBuilder.getAll(Organization);
 exports.getOrganization = controllersBuilder.getOne(Organization);
 exports.updateOrganization = controllersBuilder.updateOne(Organization);

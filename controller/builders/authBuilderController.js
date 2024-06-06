@@ -25,7 +25,7 @@ exports.login = (Model) =>
   catchAsyncError(async (req, res, next) => {
     const { email, password } = req.body;
     if (!email || !password) {
-      next(new AppError('please enter email and password', 400));
+      return next(new AppError('please enter email and password', 400));
     }
     const currentModel = await Model.findOne({ email }).select('+password');
     if (
@@ -74,7 +74,7 @@ exports.forgotPassword = (Model) =>
       next(new AppError('no model found invalid mail', 404));
     }
     if (!model.verified) {
-      next(new AppError('please verify your email', 400));
+      return next(new AppError('please verify your email', 400));
     }
     const resetToken = model.createPasswordResetToken();
     await model.save({ validateBeforeSave: false });
@@ -114,3 +114,14 @@ exports.resetPassword = (Model) =>
       status: 'success',
     });
   });
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.model.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
+    next();
+  };
+};
