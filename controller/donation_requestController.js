@@ -12,6 +12,7 @@ exports.getAllDonation_Requests = controllersBuilder.getAll(
 exports.getDonation_Request = controllersBuilder.getOne(Donation_Request);
 exports.updateDonation_Request = controllersBuilder.updateOne(Donation_Request);
 exports.deleteDonation_Request = controllersBuilder.deleteOne(Donation_Request);
+
 exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
   if (req.model.role === 'admin') return next();
 
@@ -21,10 +22,11 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
       new AppError('You do not have permission to perform this action', 403)
     );
 
-  const post = await Post.findById(req.params.id);
-  if (!post) return next(new AppError('no post found with this id'), 404);
+  const donationRequest = await Donation_Request.findById(req.params.id);
+  if (!donationRequest)
+    return next(new AppError('no Donation_Request found with this id'), 404);
 
-  if (req.model.id === post.userID.toString()) {
+  if (req.model.id === donationRequest.userID.toString()) {
     return next();
   } else
     return next(

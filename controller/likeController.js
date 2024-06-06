@@ -17,10 +17,10 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
       new AppError('You do not have permission to perform this action', 403)
     );
 
-  const post = await Post.findById(req.params.id);
-  if (!post) return next(new AppError('no post found with this id'), 404);
+  const like = await Like.findById(req.params.id);
+  if (!like) return next(new AppError('no like found with this id'), 404);
 
-  if (req.model.id === post.userID.toString()) {
+  if (req.model.id === like.userID.toString()) {
     return next();
   } else
     return next(

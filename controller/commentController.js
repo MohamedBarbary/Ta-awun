@@ -23,13 +23,13 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
       new AppError('You do not have permission to perform this action', 403)
     );
 
-  const post = await Post.findById(req.params.id);
-  if (!post) return next(new AppError('no post found with this id'), 404);
-
-  if (req.model.id === post.userID.toString()) {
-    return next();
-  } else
+  createAuthorization(req, next);
+  const comment = await Comment.findById(req.params.id);
+  if (!comment) return next(new AppError('no found comment with this id'), 404);
+  if (req.model.id !== comment.userID.toString())
     return next(
       new AppError('You do not have permission to perform this action', 403)
     );
+
+  next();
 });
