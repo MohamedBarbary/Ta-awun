@@ -38,7 +38,7 @@ exports.login = (Model) =>
       next(new AppError('invalid email or password', 400));
     }
     if (!currentModel.verified) {
-      next(new AppError('please verify your email', 400));
+      return next(new AppError('please verify your email', 400));
     }
     createSendToken(currentModel, 200, res);
   });
