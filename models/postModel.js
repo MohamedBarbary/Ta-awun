@@ -13,7 +13,6 @@ const postSchema = new mongoose.Schema(
       required: [true, 'Please add a content!'],
       minLength: 15,
     },
-    likes: Number,
     photos: {
       type: [String],
     },
