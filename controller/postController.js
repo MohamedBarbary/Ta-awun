@@ -31,7 +31,6 @@ exports.deleteUserPost = catchAsyncErrors(async (req, res, next) => {
 });
 
 const createAuthorization = (req, next) => {
-  console.log(111);
   if (req.method === 'POST' && req.model.id === req.body.userID) return next();
   else if (req.method === 'POST' && req.model.id !== req.body.userID)
     return next(
