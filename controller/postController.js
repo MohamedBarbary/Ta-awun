@@ -30,17 +30,14 @@ exports.deleteUserPost = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-const createAuthorization = (req, next) => {
-  console.log(111);
+exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
+  if (req.model.role === 'admin') return next();
+
   if (req.method === 'POST' && req.model.id === req.body.userID) return next();
   else if (req.method === 'POST' && req.model.id !== req.body.userID)
     return next(
       new AppError('You do not have permission to perform this action', 403)
     );
-};
-exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
-  if (req.model.role === 'admin') return next();
-  createAuthorization(req, next);
 
   const post = await Post.findById(req.params.id);
   if (!post) return next(new AppError('no post found with this id'), 404);

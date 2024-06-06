@@ -22,25 +22,23 @@ exports.uploadCampaignPhotos = controllersBuilder.uploadPhoto(
 exports.updateCampaignPhotos =
   controllersBuilder.addPhotosInfo(DonationCampaign);
 
-const createAuthorization = (req, next) => {
-  if (req.method === 'POST' && req.model.id === req.body.userID) return next();
-  else if (req.method === 'POST' && req.model.id !== req.body.userID)
-    return next(
-      new AppError('You do not have permission to perform this action', 403)
-    );
-};
-
-exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
-  if (req.model.role === 'admin') return next();
-  createAuthorization(req, next);
-  const deleteDonationCampaign = await DonationCampaign.findById(req.params.id);
-  if (!deleteDonationCampaign)
-    return next(new AppError('no DonationCampaign found with this id'), 404);
-
-  if (req.model.id === deleteDonationCampaign.userID.toString()) {
-    return next();
-  } else
-    return next(
-      new AppError('You do not have permission to perform this action', 403)
-    );
-});
+  exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
+    if (req.model.role === 'admin') return next();
+  
+    if (req.method === 'POST' && req.model.id === req.body.userID) return next();
+    else if (req.method === 'POST' && req.model.id !== req.body.userID)
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+  
+    const post = await Post.findById(req.params.id);
+    if (!post) return next(new AppError('no post found with this id'), 404);
+  
+    if (req.model.id === post.userID.toString()) {
+      return next();
+    } else
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+  });
+  
