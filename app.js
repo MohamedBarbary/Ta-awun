@@ -10,6 +10,8 @@ const likeRouter = require('./routes/likeRouter');
 const donation_requestRouter = require('./routes/donation_requestRouter');
 const organizationRouter = require('./routes/organizationRouter');
 const donationCampaignRouter = require('./routes/donationCampaignRouter');
+const followingRouter = require('./routes/followingRouter');
+const followerRouter = require('./routes/followerRouter');
 const AppError = require('./utils/appError');
 const app = express();
 app.use((req, res, next) => {
@@ -31,6 +33,8 @@ app.use('/api/likes', likeRouter);
 app.use('/api/donation_requests', donation_requestRouter);
 app.use('/api/organizations', organizationRouter);
 app.use('/api/donationCampaigns', donationCampaignRouter);
+app.use('/api/followings', followingRouter);
+app.use('/api/followers', followerRouter);
 app.all('*', (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl} on server!`, 404));
 });

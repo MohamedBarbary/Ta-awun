@@ -2,6 +2,7 @@ const User = require('../../models/userModel');
 const authBuilder = require('../builders/authBuilderController');
 const jwt = require('jsonwebtoken');
 const emailSender = require('../../utils/email');
+const { createMailData } = require('../../utils/createMailData');
 const catchAsyncError = require('../../utils/catchAsyncErrors');
 const AppError = require('../../utils/appError');
 
@@ -21,6 +22,25 @@ const createSendToken = (user, statusCode, res) => {
     },
   });
 };
+
+const prepareAndSendVerificationEmail = async (user, req) => {
+  const verificationToken = user.generateVerificationToken();
+  const url = `${req.protocol}://${req.get(
+    'host'
+  )}/api/users/verify/${verificationToken}`;
+  const mailHtml = `Click <a href="${url}">here</a> to confirm your email.`;
+
+  const mailData = createMailData(
+    process.env.Sender,
+    user.email,
+    'Please verify your email address',
+    mailHtml,
+    'Verify Your Email'
+  );
+
+  await emailSender(mailData);
+};
+
 exports.signUp = catchAsyncError(async (req, res, next) => {
   const user = await User.create({
     userName: req.body.userName,
@@ -28,12 +48,7 @@ exports.signUp = catchAsyncError(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-  const verificationToken = user.generateVerificationToken();
-  const url = `${req.protocol}://${req.get(
-    'host'
-  )}/api/users/verify/${verificationToken}`;
-  const html = `click <a href=${url}>here</a> to confirm your email.`;
-  await emailSender.sendMail(user.email, html, 'verify mail');
+  await prepareAndSendVerificationEmail(req, user);
   createSendToken(user, 201, res);
 });
 

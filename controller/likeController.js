@@ -2,9 +2,11 @@ const Like = require('../models/likeModel.js');
 const controllersBuilder = require('./builders/controllersBuilder');
 const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const AppError = require('../utils/appError.js');
-exports.createLike = controllersBuilder.createOne(Like);
-exports.getAllLikes = controllersBuilder.getAll(Like);
-exports.getLike = controllersBuilder.getOne(Like);
+
+const popOptions = { path: 'userID', select: 'userName photoLink' };
+exports.createLike = controllersBuilder.createOne(Like, popOptions);
+exports.getAllLikes = controllersBuilder.getAll(Like, popOptions);
+exports.getLike = controllersBuilder.getOne(Like, popOptions);
 exports.updateLike = controllersBuilder.updateOne(Like);
 exports.deleteLike = controllersBuilder.deleteOne(Like);
 

@@ -12,7 +12,10 @@ exports.getAllDonationCampaigns = controllersBuilder.getAll(
   DonationCampaign,
   popOptions
 );
-exports.getDonationCampaign = controllersBuilder.getOne(DonationCampaign);
+exports.getDonationCampaign = controllersBuilder.getOne(
+  DonationCampaign,
+  popOptions
+);
 exports.updateDonationCampaign = controllersBuilder.updateOne(DonationCampaign);
 exports.deleteDonationCampaign = controllersBuilder.deleteOne(DonationCampaign);
 exports.uploadCampaignPhotos = controllersBuilder.uploadPhoto(

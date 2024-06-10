@@ -8,7 +8,7 @@ const Donation_Request = require('../models/donation_requestModel');
 const popOptions = { path: 'userID', select: 'userName photoLink' };
 
 exports.createPost = controllersBuilder.createOne(Post);
-exports.getAllPosts = controllersBuilder.getAll(Post);
+exports.getAllPosts = controllersBuilder.getAll(Post, popOptions);
 exports.getPost = controllersBuilder.getOne(Post, popOptions);
 
 exports.updatePost = controllersBuilder.updateOne(Post);

@@ -26,5 +26,4 @@ router
 
 module.exports = router;
 
-// implement getPostDonation in my post
-// get the applier donation
+// hint* : edit the authorization & make it more private

@@ -20,7 +20,7 @@ const likeSchema = new mongoose.Schema(
 );
 likeSchema.index(
   { userID: 1, postID: 1 },
-  { unique: true, message: 'This user has already liked this post.' }
+  { unique: true, message: 'This user has already liked this post' }
 );
 
 const Like = mongoose.model('Like', likeSchema);

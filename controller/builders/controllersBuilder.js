@@ -14,13 +14,16 @@ const getImage = (imageName) => {
   return imageUrl;
 };
 
-exports.getAll = (Model) =>
+exports.getAll = (Model, popOptions) =>
   catchAsyncErrors(async (req, res, next) => {
     const features = new apiFeatures(Model.find(), req.query)
       .filter()
       .sort()
       .limit()
       .pagination();
+
+    features.query.populate(popOptions);
+
     const doc = await features.query;
     res.status(200).json({
       status: 'success',

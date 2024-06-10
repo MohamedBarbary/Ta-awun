@@ -9,7 +9,10 @@ exports.getAllDonation_Requests = controllersBuilder.getAll(
   Donation_Request,
   popOptions
 );
-exports.getDonation_Request = controllersBuilder.getOne(Donation_Request);
+exports.getDonation_Request = controllersBuilder.getOne(
+  Donation_Request,
+  popOptions
+);
 exports.updateDonation_Request = controllersBuilder.updateOne(Donation_Request);
 exports.deleteDonation_Request = controllersBuilder.deleteOne(Donation_Request);
 

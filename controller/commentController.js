@@ -4,7 +4,7 @@ const controllersBuilder = require('./builders/controllersBuilder');
 const popOptions = { path: 'userID', select: 'userName photoLink' };
 
 exports.createComment = controllersBuilder.createOne(Comment);
-exports.getAllComments = controllersBuilder.getAll(Comment);
+exports.getAllComments = controllersBuilder.getAll(Comment, popOptions);
 exports.getComment = controllersBuilder.getOne(Comment, popOptions);
 exports.updateComment = controllersBuilder.updateOne(Comment);
 exports.deleteComment = controllersBuilder.deleteOne(Comment);

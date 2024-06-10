@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const emailSender = require('../../utils/email');
 const crypto = require('crypto');
+const { createMailData } = require('../../utils/createMailData');
 const { promisify } = require('util');
 const catchAsyncError = require('../../utils/catchAsyncErrors');
 const AppError = require('../../utils/appError');
@@ -20,6 +21,26 @@ const createSendToken = (model, statusCode, res) => {
       model,
     },
   });
+};
+
+const prepareAndSendResetPasswordEmail = async (model, req) => {
+  const resetToken = model.createPasswordResetToken();
+  await model.save({ validateBeforeSave: false });
+
+  const url = `${req.protocol}://${req.get(
+    'host'
+  )}/api/models/editPassword/${resetToken}`;
+  const mailHtml = `Click <a href=${url}>here</a> to reset your password.`;
+
+  const mailData = createMailData(
+    process.env.Sender,
+    model.email,
+    'We send this mail to you to change your password.',
+    mailHtml,
+    'Change Your Password'
+  );
+
+  await emailSender.sendMail(mailData);
 };
 exports.login = (Model) =>
   catchAsyncError(async (req, res, next) => {
@@ -76,13 +97,7 @@ exports.forgotPassword = (Model) =>
     if (!model.verified) {
       return next(new AppError('please verify your email', 400));
     }
-    const resetToken = model.createPasswordResetToken();
-    await model.save({ validateBeforeSave: false });
-    const url = `${req.protocol}://${req.get(
-      'host'
-    )}/api/models/editPassword/${resetToken}`;
-    const html = `click <a href=${url}>here</a> to reset your password.`;
-    await emailSender.sendMail(model.email, html, 'reset password');
+    await prepareAndSendResetPasswordEmail(model, req);
     res.status(200).json({
       status: 'success',
       message: 'we send mail for you to change your password',
