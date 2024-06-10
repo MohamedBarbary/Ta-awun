@@ -29,7 +29,7 @@ exports.getAll = (Model, popOptions) =>
       status: 'success',
       results: doc.length,
       data: {
-        data: doc,
+        document: doc,
       },
     });
   });
@@ -42,7 +42,9 @@ exports.deleteOne = (Model) =>
     }
     res.status(204).json({
       status: 'success',
-      document,
+      data: {
+        document,
+      },
     });
   });
 
@@ -58,7 +60,7 @@ exports.getOne = (Model, popOptions) =>
     res.status(200).json({
       status: 'success',
       data: {
-        doc,
+        document: doc,
       },
     });
   });
@@ -86,7 +88,7 @@ exports.updateOne = (Model) =>
     res.status(200).json({
       status: 'success',
       data: {
-        doc,
+        document: doc,
       },
     });
   });
@@ -120,7 +122,7 @@ exports.addPhotosInfo = (Model) =>
     res.status(200).json({
       status: 'success',
       data: {
-        doc,
+        document: doc,
       },
     });
   });
