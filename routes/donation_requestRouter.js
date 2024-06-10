@@ -2,11 +2,15 @@ const express = require('express');
 const router = express.Router();
 const userAuthController = require('../controller/authControllers/userAuthController');
 const donation_requestController = require('../controller/donation_requestController');
+const {
+  checkBlacklistTokens,
+} = require('../controller/builders/authBuilderController');
 
-router.use(userAuthController.protectRoutes);
+router.use(checkBlacklistTokens, userAuthController.protectRoutes);
 
 router.route('/').get(donation_requestController.getAllDonation_Requests);
 router.route('/:id').get(donation_requestController.getDonation_Request);
+
 router
   .route('/')
   .post(

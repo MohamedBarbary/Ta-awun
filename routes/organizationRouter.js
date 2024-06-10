@@ -9,6 +9,8 @@ router.post('/login', organizationAuthController.login);
 router.post('/forgotPassword', organizationAuthController.forgotPassword);
 router.get('/editPassword/:token', organizationAuthController.editPassword);
 router.post('/resetPassword/:token', organizationAuthController.resetPassword);
+router.get('/logout', authController.logout);
+
 router.use(organizationAuthController.protectRoutes);
 router.get(
   '/getMyOrganization',

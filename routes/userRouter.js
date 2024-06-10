@@ -9,6 +9,7 @@ router.get('/verify/:token', userAuthController.verify);
 router.post('/forgotPassword', userAuthController.forgotPassword);
 router.get('/editPassword/:token', userAuthController.editPassword);
 router.post('/resetPassword/:token', userAuthController.resetPassword);
+router.get('/logout', authController.logout);
 router.use(userAuthController.protectRoutes);
 router.get('/getMe', userController.getMe, userController.getUser);
 router.delete('/deleteMe', userController.deleteMe);

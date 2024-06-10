@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userAuthController = require('../controller/authControllers/userAuthController');
 const likeController = require('../controller/likeController');
+const {
+  checkBlacklistTokens,
+} = require('../controller/builders/authBuilderController');
 
-router.use(userAuthController.protectRoutes);
+router.use(checkBlacklistTokens, userAuthController.protectRoutes);
 
 router.route('/').get(likeController.getAllLikes);
 router.route('/:id').get(likeController.getLike);

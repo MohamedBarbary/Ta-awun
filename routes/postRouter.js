@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userAuthController = require('../controller/authControllers/userAuthController');
 const postController = require('../controller/postController');
+const {
+  checkBlacklistTokens,
+} = require('../controller/builders/authBuilderController');
 
-router.use(userAuthController.protectRoutes);
+router.use(checkBlacklistTokens, userAuthController.protectRoutes);
 
 router.route('/').get(postController.getAllPosts);
 router.route('/:id').get(postController.getPost);

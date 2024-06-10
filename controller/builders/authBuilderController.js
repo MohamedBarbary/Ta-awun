@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const emailSender = require('../../utils/email');
 const crypto = require('crypto');
 const { createMailData } = require('../../utils/createMailData');
+const BlacklistToken = require('../../models/blacklistTokenModel');
 const { promisify } = require('util');
 const catchAsyncError = require('../../utils/catchAsyncErrors');
 const AppError = require('../../utils/appError');
@@ -63,6 +64,27 @@ exports.login = (Model) =>
     }
     createSendToken(currentModel, 200, res);
   });
+
+exports.checkBlacklistTokens = catchAsyncError(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  if (!token) {
+    return next(new Error('No token provided!'));
+  }
+
+  const blacklistedToken = await BlacklistToken.findOne({ token: token });
+
+  if (blacklistedToken) {
+    return next(new Error('Token has been blacklisted. Please log in again.'));
+  }
+
+  next();
+});
 
 exports.protectRoutes = (Model) =>
   catchAsyncError(async (req, res, next) => {
@@ -129,6 +151,28 @@ exports.resetPassword = (Model) =>
       status: 'success',
     });
   });
+
+exports.logout = catchAsyncError(async (req, res, next) => {
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith('Bearer')
+  ) {
+    token = req.headers.authorization.split(' ')[1];
+  }
+  if (!token) {
+    return next(new Error('No token provided!'));
+  }
+
+  await BlacklistToken.create({
+    token: token,
+  });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'You have successfully logged out.',
+  });
+});
 
 exports.restrictTo = (...roles) => {
   return (req, res, next) => {

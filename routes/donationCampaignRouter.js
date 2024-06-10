@@ -2,17 +2,22 @@ const express = require('express');
 const router = express.Router();
 const organizationAuthController = require('../controller/authControllers/organizationAuthController');
 const donationCampaignController = require('../controller/donationCampaignController');
+const {
+  checkBlacklistTokens,
+} = require('../controller/builders/authBuilderController');
 
-router.use(organizationAuthController.protectRoutes);
+router.use(checkBlacklistTokens, organizationAuthController.protectRoutes);
 
 router.route('/').get(donationCampaignController.getAllDonationCampaigns);
 router.route('/:id').get(donationCampaignController.getDonationCampaign);
+
 router
   .route('/')
   .post(
     donationCampaignController.isUserAuthorized,
     donationCampaignController.createDonationCampaign
   );
+
 router
   .route('/:id')
   .patch(
@@ -23,6 +28,7 @@ router
     donationCampaignController.isUserAuthorized,
     donationCampaignController.deleteDonationCampaign
   );
+
 router.patch(
   '/uploadPostPhoto/:id',
   donationCampaignController.isUserAuthorized,

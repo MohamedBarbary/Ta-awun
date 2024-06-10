@@ -2,8 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userAuthController = require('../controller/authControllers/userAuthController');
 const commentController = require('../controller/commentController');
+const {
+  checkBlacklistTokens,
+} = require('../controller/builders/authBuilderController');
 
-router.use(userAuthController.protectRoutes);
+router.use(checkBlacklistTokens, userAuthController.protectRoutes);
 
 router.route('/').get(commentController.getAllComments);
 router.route('/:id').get(commentController.getComment);

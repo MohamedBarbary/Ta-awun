@@ -2,9 +2,11 @@ const express = require('express');
 const router = express.Router();
 const userAuthController = require('../controller/authControllers/userAuthController');
 const followingController = require('../controller/followingController');
+const {
+  checkBlacklistTokens,
+} = require('../controller/builders/authBuilderController');
 
-router.use(userAuthController.protectRoutes);
-
+router.use(checkBlacklistTokens, userAuthController.protectRoutes);
 router.route('/').get(followingController.getAllFollowings);
 router.route('/:id').get(followingController.getFollowing);
 
