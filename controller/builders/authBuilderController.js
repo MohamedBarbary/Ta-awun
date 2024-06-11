@@ -24,7 +24,7 @@ const createSendToken = (model, statusCode, res) => {
   });
 };
 
-const prepareAndSendResetPasswordEmail = async (model, req) => {
+const prepareAndSendResetPasswordEmail = catchAsyncError(async (model, req) => {
   const resetToken = model.createPasswordResetToken();
   await model.save({ validateBeforeSave: false });
 
@@ -34,7 +34,7 @@ const prepareAndSendResetPasswordEmail = async (model, req) => {
   const mailHtml = `Click <a href=${url}>here</a> to reset your password.`;
 
   const mailData = createMailData(
-    process.env.Sender,
+    process.env.TaawunMail,
     model.email,
     'We send this mail to you to change your password.',
     mailHtml,
@@ -42,7 +42,7 @@ const prepareAndSendResetPasswordEmail = async (model, req) => {
   );
 
   await emailSender.sendMail(mailData);
-};
+});
 exports.login = (Model) =>
   catchAsyncError(async (req, res, next) => {
     const { email, password } = req.body;
@@ -74,13 +74,15 @@ exports.checkBlacklistTokens = catchAsyncError(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
   if (!token) {
-    return next(new Error('No token provided!'));
+    return next(new AppError('No token provided!'));
   }
 
   const blacklistedToken = await BlacklistToken.findOne({ token: token });
 
   if (blacklistedToken) {
-    return next(new Error('Token has been blacklisted. Please log in again.'));
+    return next(
+      new AppError('Token has been blacklisted. Please log in again.')
+    );
   }
 
   next();
@@ -104,7 +106,7 @@ exports.protectRoutes = (Model) =>
     );
     const currentModel = await Model.findById(decodedData.id);
     if (!currentModel) {
-      return next(new AppError('Model not exist please try again ', 404));
+      return next(new AppError('Model not exist please try again', 404));
     }
     req.model = currentModel;
     next();
@@ -161,7 +163,7 @@ exports.logout = catchAsyncError(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
   if (!token) {
-    return next(new Error('No token provided!'));
+    return next(new AppError('No token provided!'));
   }
 
   await BlacklistToken.create({

@@ -11,7 +11,7 @@ exports.sendMail = catchAsyncError(async (mailData) => {
     port: 465,
     secure: true,
     auth: {
-      user: process.env.Sender,
+      user: process.env.TaawunMail,
       pass: process.env.App_Password,
     },
     tls: {

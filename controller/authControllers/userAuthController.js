@@ -23,7 +23,7 @@ const createSendToken = (user, statusCode, res) => {
   });
 };
 
-const prepareAndSendVerificationEmail = async (user, req) => {
+const prepareAndSendVerificationEmail = catchAsyncError(async (user, req) => {
   const verificationToken = user.generateVerificationToken();
   const url = `${req.protocol}://${req.get(
     'host'
@@ -31,15 +31,15 @@ const prepareAndSendVerificationEmail = async (user, req) => {
   const mailHtml = `Click <a href="${url}">here</a> to confirm your email.`;
 
   const mailData = createMailData(
-    process.env.Sender,
+    process.env.TaawunMail,
     user.email,
     'Please verify your email address',
     mailHtml,
     'Verify Your Email'
   );
 
-  await emailSender(mailData);
-};
+  await emailSender.sendMail(mailData);
+});
 
 exports.signUp = catchAsyncError(async (req, res, next) => {
   const user = await User.create({

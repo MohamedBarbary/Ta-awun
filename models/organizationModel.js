@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const validator = require('validator');
 const crypto = require('crypto');
 
@@ -38,7 +39,7 @@ const organizationSchema = new mongoose.Schema(
     },
     verified: {
       type: Boolean,
-      default: true,
+      default: false,
     },
     websiteLink: {
       type: String,
@@ -78,6 +79,16 @@ organizationSchema.pre(/^find/, async function (next) {
   this.find({ active: true });
   next;
 });
+
+organizationSchema.methods.generateVerificationToken = function () {
+  const user = this;
+  const verificationToken = jwt.sign(
+    { ID: user._id },
+    process.env.USER_VERIFICATION_TOKEN_SECRET,
+    { expiresIn: 1 * 60 * 60 }
+  );
+  return verificationToken;
+};
 
 organizationSchema.methods.compareBcryptHashedCodes = async function (
   code,
