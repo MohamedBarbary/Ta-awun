@@ -80,7 +80,7 @@ exports.createOne = (Model, popOptions) =>
     });
   });
 
-exports.updateOne = (Model) =>
+exports.updateOne = (Model, popOptions) =>
   catchAsyncErrors(async (req, res, next) => {
     const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -89,10 +89,14 @@ exports.updateOne = (Model) =>
     if (!doc) {
       return next(new AppError('no found document with this id'), 404);
     }
+    let populatedDocument = doc;
+    if (popOptions) {
+      populatedDocument = await doc.populate(popOptions);
+    }
     res.status(200).json({
       status: 'success',
       data: {
-        document: doc,
+        document: populatedDocument,
       },
     });
   });
@@ -111,7 +115,7 @@ exports.uploadPhoto = (folderName, modelName) => {
   };
 };
 
-exports.addPhotosInfo = (Model) =>
+exports.addPhotosInfo = (Model, popOptions) =>
   catchAsyncErrors(async (req, res, next) => {
     let query = Model.findById(req.params.id);
     const doc = await query;
@@ -123,10 +127,14 @@ exports.addPhotosInfo = (Model) =>
       doc.photosLink.push(getImage(req.file.filename));
       await doc.save();
     }
+    let populatedDocument = doc;
+    if (popOptions) {
+      populatedDocument = await doc.populate(popOptions);
+    }
     res.status(200).json({
       status: 'success',
       data: {
-        document: doc,
+        document: populatedDocument,
       },
     });
   });

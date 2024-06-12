@@ -3,16 +3,19 @@ const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const controllersBuilder = require('./builders/controllersBuilder');
 const popOptions = { path: 'userID', select: 'userName photoLink' };
 
-exports.createComment = controllersBuilder.createOne(Comment);
+exports.createComment = controllersBuilder.createOne(Comment, popOptions);
 exports.getAllComments = controllersBuilder.getAll(Comment, popOptions);
 exports.getComment = controllersBuilder.getOne(Comment, popOptions);
-exports.updateComment = controllersBuilder.updateOne(Comment);
+exports.updateComment = controllersBuilder.updateOne(Comment, popOptions);
 exports.deleteComment = controllersBuilder.deleteOne(Comment);
 exports.uploadCommentPhotos = controllersBuilder.uploadPhoto(
   'commentPhotos',
   'comment'
 );
-exports.updateCommentPhotos = controllersBuilder.addPhotosInfo(Comment);
+exports.updateCommentPhotos = controllersBuilder.addPhotosInfo(
+  Comment,
+  popOptions
+);
 
 exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
   if (req.model.role === 'admin') return next();
