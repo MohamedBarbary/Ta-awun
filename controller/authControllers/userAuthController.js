@@ -48,7 +48,7 @@ exports.signUp = catchAsyncError(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-  await prepareAndSendVerificationEmail(req, user);
+  await prepareAndSendVerificationEmail(user, req);
   createSendToken(user, 201, res);
 });
 
