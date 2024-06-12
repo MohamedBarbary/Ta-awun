@@ -65,13 +65,17 @@ exports.getOne = (Model, popOptions) =>
     });
   });
 
-exports.createOne = (Model) =>
+exports.createOne = (Model, popOptions) =>
   catchAsyncErrors(async (req, res, next) => {
     const newDocument = await Model.create(req.body);
+    let populatedDocument = newDocument;
+    if (popOptions) {
+      populatedDocument = await newDocument.populate(popOptions);
+    }
     res.status(201).json({
       status: 'success',
       data: {
-        document: newDocument,
+        document: populatedDocument,
       },
     });
   });

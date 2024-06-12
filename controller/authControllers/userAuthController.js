@@ -39,8 +39,6 @@ const prepareAndSendVerificationEmail = catchAsyncError(async (user, req) => {
     'Verify Your Email'
   );
 
-  console.log('Mail Data:', mailData);
-
   await emailSender.sendMail(mailData);
 });
 
