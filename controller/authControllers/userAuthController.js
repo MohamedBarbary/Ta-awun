@@ -25,6 +25,7 @@ const createSendToken = (user, statusCode, res) => {
 
 const prepareAndSendVerificationEmail = catchAsyncError(async (user, req) => {
   const verificationToken = user.generateVerificationToken();
+
   const url = `${req.protocol}://${req.get(
     'host'
   )}/api/users/verify/${verificationToken}`;
@@ -37,6 +38,8 @@ const prepareAndSendVerificationEmail = catchAsyncError(async (user, req) => {
     mailHtml,
     'Verify Your Email'
   );
+
+  console.log('Mail Data:', mailData);
 
   await emailSender.sendMail(mailData);
 });
