@@ -4,8 +4,8 @@ const donationCampaignSchema = new mongoose.Schema(
   {
     postID: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Organization',
-      required: [true, 'Enter the ID of the organization'],
+      ref: 'User',
+      required: [true, 'Enter the ID of the User'],
     },
     title: {
       type: String,

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const userAuthController = require('../controller/authControllers/userAuthController');
+const userAuthController = require('../controller/userAuthController');
 const followerController = require('../controller/followerController');
 const {
   checkBlacklistTokens,

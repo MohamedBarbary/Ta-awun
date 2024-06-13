@@ -154,6 +154,27 @@ exports.resetPassword = (Model) =>
     });
   });
 
+exports.updatePassword = (Model) =>
+  catchAsyncError(async (req, res, next) => {
+    const model = await Model.findById(req.model.id).select('+password');
+    if (!model) {
+      return new AppError('no model found', 404);
+    }
+    if (
+      !(await model.compareBcryptHashedCodes(
+        req.body.currentPassword,
+        model.password
+      ))
+    ) {
+      return next(new AppError('currentPassword is not correct'), 401);
+    }
+
+    model.password = req.body.password;
+    model.passwordConfirm = req.body.passwordConfirm;
+    await model.save();
+    createSendToken(model, 200, res);
+  });
+
 exports.logout = catchAsyncError(async (req, res, next) => {
   let token;
   if (
@@ -176,9 +197,19 @@ exports.logout = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.restrictTo = (...roles) => {
+exports.restrictToRoles = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.model.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
+    next();
+  };
+};
+exports.restrictToUserTypes = (...userTypes) => {
+  return (req, res, next) => {
+    if (!userTypes.includes(req.model.userType)) {
       return next(
         new AppError('You do not have permission to perform this action', 403)
       );

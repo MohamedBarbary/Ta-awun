@@ -4,8 +4,8 @@ const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const AppError = require('../utils/appError.js');
 
 const popOptions = {
-  path: 'organizationID',
-  select: 'organizationName photoLink',
+  path: 'userID',
+  select: 'userName photoLink',
 };
 exports.createDonationCampaign = controllersBuilder.createOne(DonationCampaign);
 exports.getAllDonationCampaigns = controllersBuilder.getAll(
@@ -34,11 +34,11 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
       new AppError('You do not have permission to perform this action', 403)
     );
 
-  const deleteDonationCampaign = await DonationCampaign.findById(req.params.id);
-  if (!deleteDonationCampaign)
+  const donationCampaign = await DonationCampaign.findById(req.params.id);
+  if (!donationCampaign)
     return next(new AppError('no DonationCampaign found with this id'), 404);
 
-  if (req.model.id === deleteDonationCampaign.userID.toString()) {
+  if (req.model.id === donationCampaign.userID.toString()) {
     return next();
   } else
     return next(

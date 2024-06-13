@@ -7,7 +7,7 @@ const popOptions = { path: 'userID', select: 'userName photoLink' };
 exports.createLike = controllersBuilder.createOne(Like, popOptions);
 exports.getAllLikes = controllersBuilder.getAll(Like, popOptions);
 exports.getLike = controllersBuilder.getOne(Like, popOptions);
-exports.updateLike = controllersBuilder.updateOne(Like);
+exports.updateLike = controllersBuilder.updateOne(Like, popOptions);
 exports.deleteLike = controllersBuilder.deleteOne(Like);
 
 exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {

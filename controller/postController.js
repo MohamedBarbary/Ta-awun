@@ -3,11 +3,10 @@ const controllersBuilder = require('./builders/controllersBuilder.js');
 const Comment = require('../models/commentModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const AppError = require('../utils/appError.js');
-const User = require('../models/userModel.js');
 const popOptions = { path: 'userID', select: 'userName photoLink' };
 
 exports.createPost = catchAsyncErrors(async (req, res, next) => {
-  const newDocument = await User.create(req.body);
+  const newDocument = await Post.create(req.body);
   let populatedDocument = newDocument;
   if (popOptions) {
     populatedDocument = await newDocument.populate(popOptions);

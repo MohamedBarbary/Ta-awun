@@ -1,8 +1,7 @@
 const express = require('express');
 const { sendMessage, getMessages } = require('../controller/messageController');
-const {
-  protectRoutes,
-} = require('../controller/authControllers/userAuthController');
+const { protectRoutes } = require('../controller/userAuthController');
+
 const {
   checkBlacklistTokens,
 } = require('../controller/builders/authBuilderController');
