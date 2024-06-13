@@ -4,10 +4,23 @@ const Comment = require('../models/commentModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const AppError = require('../utils/appError.js');
 const Donation_Request = require('../models/donation_requestModel');
+const User = require('../models/userModel.js');
 
 const popOptions = { path: 'userID', select: 'userName photoLink' };
 
-exports.createPost = controllersBuilder.createOne(Post, popOptions);
+exports.createPost = catchAsyncErrors(async (req, res, next) => {
+  const newDocument = await User.create(req.body);
+  let populatedDocument = newDocument;
+  if (popOptions) {
+    populatedDocument = await newDocument.populate(popOptions);
+  }
+  res.status(201).json({
+    status: 'success',
+    data: {
+      document: populatedDocument,
+    },
+  });
+});
 exports.getAllPosts = controllersBuilder.getAll(Post, popOptions);
 exports.getPost = controllersBuilder.getOne(Post, popOptions);
 
