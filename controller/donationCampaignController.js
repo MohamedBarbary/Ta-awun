@@ -7,7 +7,10 @@ const popOptions = {
   path: 'userID',
   select: 'userName photoLink',
 };
-exports.createDonationCampaign = controllersBuilder.createOne(DonationCampaign);
+exports.createDonationCampaign = controllersBuilder.createOne(
+  DonationCampaign,
+  popOptions
+);
 exports.getAllDonationCampaigns = controllersBuilder.getAll(
   DonationCampaign,
   popOptions
@@ -16,14 +19,19 @@ exports.getDonationCampaign = controllersBuilder.getOne(
   DonationCampaign,
   popOptions
 );
-exports.updateDonationCampaign = controllersBuilder.updateOne(DonationCampaign);
+exports.updateDonationCampaign = controllersBuilder.updateOne(
+  DonationCampaign,
+  popOptions
+);
 exports.deleteDonationCampaign = controllersBuilder.deleteOne(DonationCampaign);
 exports.uploadCampaignPhotos = controllersBuilder.uploadPhoto(
   'campaignPhotos',
   'campaign'
 );
-exports.updateCampaignPhotos =
-  controllersBuilder.addPhotosInfo(DonationCampaign);
+exports.updateCampaignPhotos = controllersBuilder.addPhotosInfo(
+  DonationCampaign,
+  popOptions
+);
 
 exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
   if (req.model.role === 'admin') return next();
