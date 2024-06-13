@@ -7,15 +7,15 @@ const Donation_Request = require('../models/donation_requestModel');
 
 const popOptions = { path: 'userID', select: 'userName photoLink' };
 
-exports.createPost = controllersBuilder.createOne(Post);
+exports.createPost = controllersBuilder.createOne(Post, popOptions);
 exports.getAllPosts = controllersBuilder.getAll(Post, popOptions);
 exports.getPost = controllersBuilder.getOne(Post, popOptions);
 
-exports.updatePost = controllersBuilder.updateOne(Post);
+exports.updatePost = controllersBuilder.updateOne(Post, popOptions);
 exports.deletePost = controllersBuilder.deleteOne(Post);
 
 exports.uploadPostPhotos = controllersBuilder.uploadPhoto('postPhotos', 'post');
-exports.updatePostPhotos = controllersBuilder.addPhotosInfo(Post);
+exports.updatePostPhotos = controllersBuilder.addPhotosInfo(Post, popOptions);
 
 exports.deleteUserPost = catchAsyncErrors(async (req, res, next) => {
   const post = await Post.findByIdAndDelete(req.params.id);

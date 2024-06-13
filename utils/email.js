@@ -4,7 +4,6 @@ const Mailgen = require('mailgen');
 
 exports.sendMail = catchAsyncError(async (mailData) => {
   const { senderMail, receiverMail, content, mailHtml, subject } = mailData;
-
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',

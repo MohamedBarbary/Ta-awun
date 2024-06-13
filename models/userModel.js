@@ -42,6 +42,12 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'admin'],
       default: 'user',
     },
+    userType: {
+      type: String,
+      enum: ['user', 'organization'],
+      default: 'user',
+    },
+
     verified: {
       type: Boolean,
       default: false,
@@ -84,13 +90,14 @@ userSchema.pre('save', function (next) {
   this.active = true;
   next();
 });
+
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 12);
   this.passwordConfirm = undefined;
-  this.userID = undefined;
   next();
 });
+
 userSchema.pre(/^find/, async function (next) {
   this.find({ active: true });
   next();
@@ -101,6 +108,7 @@ userSchema.methods.compareBcryptHashedCodes = async function (
 ) {
   return await bcrypt.compare(code, hashedCode);
 };
+
 userSchema.methods.changePasswordAfter = function (JWTTimestamp) {
   if (this.passwordChangedAt) {
     const changedTimestamp = parseInt(
@@ -111,6 +119,7 @@ userSchema.methods.changePasswordAfter = function (JWTTimestamp) {
     return JWTTimestamp < changedTimestamp;
   }
 };
+
 userSchema.methods.generateVerificationToken = function () {
   const user = this;
   const verificationToken = jwt.sign(

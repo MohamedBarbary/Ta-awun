@@ -25,6 +25,7 @@ const createSendToken = (user, statusCode, res) => {
 
 const prepareAndSendVerificationEmail = catchAsyncError(async (user, req) => {
   const verificationToken = user.generateVerificationToken();
+
   const url = `${req.protocol}://${req.get(
     'host'
   )}/api/users/verify/${verificationToken}`;
@@ -48,7 +49,7 @@ exports.signUp = catchAsyncError(async (req, res, next) => {
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
-  await prepareAndSendVerificationEmail(req, user);
+  await prepareAndSendVerificationEmail(user, req);
   createSendToken(user, 201, res);
 });
 
