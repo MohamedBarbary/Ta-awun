@@ -30,13 +30,17 @@ const sendMessage = async (req, res) => {
 
     await Promise.all([conversation.save(), newMessage.save()]);
 
+    const populatedMessage = await Message.findById(newMessage._id)
+      .populate('senderId', 'message photoLink _id')
+      .populate('receiverId', 'message photoLink _id');
+
     const receiverSocketId = getReceiverSocketId(receiverId);
 
     if (receiverSocketId) {
-      io.to(receiverSocketId).emit('newMessage', newMessage);
+      io.to(receiverSocketId).emit('newMessage', populatedMessage);
     }
 
-    res.status(201).json(newMessage);
+    res.status(201).json(populatedMessage);
   } catch (error) {
     console.log('Error in sendMessage controller: ', error.message);
     res.status(500).json({ error: 'Internal server error' });
@@ -50,7 +54,13 @@ const getMessages = async (req, res) => {
 
     const conversation = await Conversation.findOne({
       participants: { $all: [senderId, userToChatId] },
-    }).populate('messages');
+    }).populate({
+      path: 'messages',
+      populate: [
+        { path: 'senderId', select: 'message photoLink _id' },
+        { path: 'receiverId', select: 'message photoLink _id' },
+      ],
+    });
 
     if (!conversation) return res.status(200).json([]);
 
