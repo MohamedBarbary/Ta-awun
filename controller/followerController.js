@@ -1,10 +1,19 @@
 const Follower = require('../models/followerModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const controllersBuilder = require('./builders/controllersBuilder');
-const popOptions = { path: 'followingID', select: 'userName photoLink' };
+const popOptions = [
+  {
+    path: 'followerID',
+    select: 'userName photoLink',
+  },
+  {
+    path: 'userID',
+    select: 'userName photoLink',
+  },
+];
 
-exports.createFollower = controllersBuilder.createOne(Follower,popOptions);
-exports.getAllFollowers = controllersBuilder.getAll(Follower,popOptions);
+exports.createFollower = controllersBuilder.createOne(Follower, popOptions);
+exports.getAllFollowers = controllersBuilder.getAll(Follower, popOptions);
 exports.getFollower = controllersBuilder.getOne(Follower, popOptions);
 exports.updateFollower = controllersBuilder.updateOne(Follower);
 exports.deleteFollower = controllersBuilder.deleteOne(Follower);

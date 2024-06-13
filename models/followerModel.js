@@ -6,12 +6,12 @@ const followerSchema = new mongoose.Schema(
     userID: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'enter your id '],
+      required: [true, 'enter your id'],
     },
-    followeraID: {
+    followerID: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: [true, 'enter your id '],
+      required: [true, 'enter your id'],
     },
   },
   {
