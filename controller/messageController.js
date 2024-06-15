@@ -81,6 +81,7 @@ const getAllConversations = async (req, res) => {
       participants: userId,
     }).populate({
       path: 'messages',
+      options: { sort: { createdAt: -1 } },
       populate: [
         { path: 'senderId', select: 'message photoLink _id' },
         { path: 'receiverId', select: 'message photoLink _id' },
