@@ -47,13 +47,38 @@ const sendMessage = async (req, res) => {
   }
 };
 
-const getMessages = async (req, res) => {
-  try {
-    const { id: userToChatId } = req.params;
-    const senderId = req.model._id;
+// const getMessages = async (req, res) => {
+//   try {
+//     const { id: userToChatId } = req.params;
+//     const senderId = req.model._id;
 
-    const conversation = await Conversation.findOne({
-      participants: { $all: [senderId, userToChatId] },
+//     const conversation = await Conversation.findOne({
+//       participants: { $all: [senderId, userToChatId] },
+//     }).populate({
+//       path: 'messages',
+//       populate: [
+//         { path: 'senderId', select: 'message photoLink _id' },
+//         { path: 'receiverId', select: 'message photoLink _id' },
+//       ],
+//     });
+
+//     if (!conversation) return res.status(200).json([]);
+
+//     const messages = conversation.messages;
+
+//     res.status(200).json(messages);
+//   } catch (error) {
+//     console.log('Error in getMessages controller: ', error.message);
+//     res.status(500).json({ error: 'Internal server error' });
+//   }
+// };
+
+const getAllConversations = async (req, res) => {
+  try {
+    const userId = req.model._id;
+
+    const conversations = await Conversation.find({
+      participants: userId,
     }).populate({
       path: 'messages',
       populate: [
@@ -62,18 +87,15 @@ const getMessages = async (req, res) => {
       ],
     });
 
-    if (!conversation) return res.status(200).json([]);
-
-    const messages = conversation.messages;
-
-    res.status(200).json(messages);
+    res.status(200).json(conversations);
   } catch (error) {
-    console.log('Error in getMessages controller: ', error.message);
+    console.log('Error in getAllConversations controller: ', error.message);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
 
 module.exports = {
   sendMessage,
-  getMessages,
+  // getMessages,
+  getAllConversations,
 };
