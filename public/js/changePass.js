@@ -1,5 +1,5 @@
 const blueParagraph = document.querySelector('.blue-paragraph');
-
+const apiRootUrl = 'https://social-api-trlr.onrender.com';
 function extractTokenFromUrl() {
   const path = window.location.pathname;
   const pathArray = path.split('/');
@@ -32,8 +32,7 @@ document
       passwordConfirm: confirmPassword,
     };
     console.log(formData);
-    const apiUrl =
-      'https://social-api-production-6bd9.up.railway.app/api/users/resetPassword/';
+    const apiUrl = `${apiRootUrl}/api/users/resetPassword/`;
     console.log(apiUrl + token);
     fetch(apiUrl + token, {
       method: 'POST',

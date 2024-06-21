@@ -30,7 +30,7 @@ const prepareAndSendResetPasswordEmail = catchAsyncError(async (model, req) => {
 
   const url = `${req.protocol}://${req.get(
     'host'
-  )}/api/models/editPassword/${resetToken}`;
+  )}/api/users/editPassword/${resetToken}`;
   const mailHtml = `Click <a href=${url}>here</a> to reset your password.`;
 
   const mailData = createMailData(
