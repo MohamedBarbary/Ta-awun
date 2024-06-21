@@ -73,7 +73,7 @@ exports.signUp = catchAsyncError(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
   if (user.userType === 'user') {
-    await prepareAndSendVerificationEmail(user, req);
+    await prepareAndSendVerificationEmailUser(user, req);
   } else {
     await organizationPrepareAndSendVerificationEmail(user, req);
   }
