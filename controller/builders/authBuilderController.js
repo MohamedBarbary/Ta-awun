@@ -30,7 +30,7 @@ const prepareAndSendResetPasswordEmail = catchAsyncError(async (model, req) => {
 
   const url = `${req.protocol}://${req.get(
     'host'
-  )}/api/models/editPassword/${resetToken}`;
+  )}/api/users/editPassword/${resetToken}`;
   const mailHtml = `Click <a href=${url}>here</a> to reset your password.`;
 
   const mailData = createMailData(
@@ -43,6 +43,7 @@ const prepareAndSendResetPasswordEmail = catchAsyncError(async (model, req) => {
 
   await emailSender.sendMail(mailData);
 });
+
 exports.login = (Model) =>
   catchAsyncError(async (req, res, next) => {
     const { email, password } = req.body;
@@ -128,9 +129,6 @@ exports.forgotPassword = (Model) =>
     });
   });
 
-exports.editPassword = catchAsyncError(async (req, res, next) => {
-  res.status(200).render('resetPassword');
-});
 exports.resetPassword = (Model) =>
   catchAsyncError(async (req, res, next) => {
     const hashedToken = crypto

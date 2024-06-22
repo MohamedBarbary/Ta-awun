@@ -11,6 +11,19 @@ const donationCampaignSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Enter campaign title'],
     },
+    titleDescription: {
+      type: String,
+      required: [true, 'Enter campaign titleDescription'],
+      maxLength: 80,
+    },
+    aboutCampaign: {
+      type: String,
+      required: [true, 'Enter about the campaign data '],
+    },
+    beneficiaries: {
+      type: Number,
+      required: [true, 'Enter beneficiaries'],
+    },
     photos: {
       type: [String],
     },
