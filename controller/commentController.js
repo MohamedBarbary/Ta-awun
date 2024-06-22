@@ -1,6 +1,7 @@
 const Comment = require('../models/commentModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const controllersBuilder = require('./builders/controllersBuilder');
+const AppError = require('../utils/appError.js');
 const popOptions = { path: 'userID', select: 'userName photoLink' };
 
 exports.createComment = controllersBuilder.createOne(Comment, popOptions);

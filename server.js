@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
+const mongoSanitize = require('express-mongo-sanitize');
+const rateLimit = require('express-rate-limit');
 const globalErrorHandler = require('./controller/errorController');
 const userRouter = require('./routes/userRouter');
 const postRouter = require('./routes/postRouter');
@@ -25,7 +27,15 @@ app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
 });
+
 app.use(helmet());
+const limiter = rateLimit({
+  max: 400,
+  windowMs: 60 * 60 * 1000,
+  message: 'Too many requests from same IP , please try after a hour',
+});
+app.use('/api', limiter);
+app.use(mongoSanitize());
 app.use(express.json({ limit: '10kb' }));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
