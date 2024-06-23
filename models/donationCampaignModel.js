@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const donationCampaignSchema = new mongoose.Schema(
   {
-    postID: {
+    userID: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: [true, 'Enter the ID of the User'],
