@@ -24,6 +24,7 @@ const donationCampaignSchema = new mongoose.Schema(
       type: Number,
       required: [true, 'Enter beneficiaries'],
     },
+    category: String,
     photos: {
       type: [String],
     },
