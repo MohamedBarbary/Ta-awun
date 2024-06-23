@@ -33,7 +33,6 @@ const donationCampaignSchema = new mongoose.Schema(
     },
     remainingAmount: {
       type: Number,
-      required: true,
     },
     totalAmount: {
       type: Number,
