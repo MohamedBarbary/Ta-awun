@@ -32,8 +32,8 @@ exports.uploadPostPhotos = controllersBuilder.uploadPhoto('postPhotos', 'post');
 exports.updatePostPhotos = controllersBuilder.addPhotosInfo(Post, popOptions);
 
 exports.deleteUserPost = catchAsyncErrors(async (req, res, next) => {
-  const post = await Post.findByIdAndDelete(req.params.id);
-  if (!post) {
+  const document = await Post.findByIdAndDelete(req.params.id);
+  if (!document) {
     next(new AppError('no document found with this data'));
   }
   await Comment.deleteMany({ postID: req.params.id });
