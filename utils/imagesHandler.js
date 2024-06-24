@@ -12,7 +12,12 @@ exports.storage = (fileName, folderName) => {
     params: (req, file) => {
       const folder = folderName;
       const filename = fileName;
-      const transformation = { width: 200, height: 200, crop: 'fill' };
+      const transformation = {
+        width: 200,
+        height: 200,
+        crop: 'fill',
+        quality: 'auto:best',
+      };
       return {
         folder,
         allowedFormats: ['jpeg', 'png', 'jpg'],
