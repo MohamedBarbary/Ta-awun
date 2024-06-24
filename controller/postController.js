@@ -3,8 +3,10 @@ const controllersBuilder = require('./builders/controllersBuilder.js');
 const Comment = require('../models/commentModel');
 const catchAsyncErrors = require('../utils/catchAsyncErrors.js');
 const AppError = require('../utils/appError.js');
-const popOptions = { path: 'userID', select: 'userName photoLink' };
 const speechPrediction = require('../utils/hateSpeechPrediction.js');
+
+const popOptions = { path: 'userID', select: 'userName photoLink city' };
+
 exports.createPost = catchAsyncErrors(async (req, res, next) => {
   const { content } = req.body;
   const prediction = await speechPrediction(content);

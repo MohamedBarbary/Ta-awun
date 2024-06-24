@@ -68,16 +68,9 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    location: {
-      type: {
-        type: String,
-        enum: ['Point'],
-        required: false,
-      },
-      coordinates: {
-        type: [Number],
-        required: false,
-      },
+    city: {
+      type: String,
+      required: [true, 'Please Enter your city!'],
     },
     birthDate: Date,
     passwordResetToken: String,
