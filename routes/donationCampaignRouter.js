@@ -33,7 +33,7 @@ router
   );
 
 router.patch(
-  '/uploadPostPhoto/:id',
+  '/uploadtDonationCampaignPhoto/:id',
   donationCampaignController.isUserAuthorized,
   donationCampaignController.uploadCampaignPhotos,
   donationCampaignController.updateCampaignPhotos
