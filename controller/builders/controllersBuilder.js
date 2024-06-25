@@ -38,7 +38,7 @@ exports.deleteOne = (Model) =>
   catchAsyncErrors(async (req, res, next) => {
     const document = await Model.findByIdAndDelete(req.params.id);
     if (!document) {
-      new AppError('no document found with this data');
+    return next (new AppError('no document found with this data'));
     }
     res.status(204).json({
       status: 'success',
