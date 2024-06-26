@@ -58,7 +58,7 @@ exports.login = (Model) =>
         currentModel.password
       ))
     ) {
-      next(new AppError('invalid email or password', 400));
+      return next(new AppError('invalid email or password', 400));
     }
     if (!currentModel.verified) {
       return next(new AppError('please verify your email', 400));
@@ -82,7 +82,7 @@ exports.checkBlacklistTokens = catchAsyncError(async (req, res, next) => {
 
   if (blacklistedToken) {
     return next(
-      new AppError('Token has been blacklisted. Please log in again.')
+      new AppError('Token has been blacklisted. Please log in again.', 400)
     );
   }
 
@@ -117,7 +117,7 @@ exports.forgotPassword = (Model) =>
   catchAsyncError(async (req, res, next) => {
     const model = await Model.findOne({ email: req.body.email });
     if (!model) {
-      next(new AppError('no model found invalid mail', 404));
+      return next(new AppError('no model found invalid mail', 404));
     }
     if (!model.verified) {
       return next(new AppError('please verify your email', 400));

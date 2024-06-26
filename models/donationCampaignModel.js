@@ -38,6 +38,12 @@ const donationCampaignSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    donations: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Donation',
+      },
+    ],
   },
   {
     timestamps: true,

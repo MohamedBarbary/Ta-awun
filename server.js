@@ -13,13 +13,14 @@ const likeRouter = require('./routes/likeRouter');
 const donationCampaignRouter = require('./routes/donationCampaignRouter');
 const followingRouter = require('./routes/followingRouter');
 const followerRouter = require('./routes/followerRouter');
-const messageRoutes = require('./routes/messageRouter');
+const messageRouter = require('./routes/messageRouter');
+const paymentRouter = require('./routes/paymentRouter');
 const AppError = require('./utils/appError');
 const connectDB = require('./utils/connectDB');
 const { app, server } = require('./socket/socket');
 
-const PORT = process.env.PORT || 4003;
 dotenv.config();
+const PORT = process.env.PORT || 4003;
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -48,7 +49,8 @@ app.use('/api/likes', likeRouter);
 app.use('/api/donationCampaigns', donationCampaignRouter);
 app.use('/api/followings', followingRouter);
 app.use('/api/followers', followerRouter);
-app.use('/api/messages', messageRoutes);
+app.use('/api/messages', messageRouter);
+app.use('/api/payments', paymentRouter);
 app.all('*', (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl} on server!`, 404));
 });
