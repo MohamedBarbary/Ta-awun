@@ -93,12 +93,12 @@ exports.verify = catchAsyncError(async (req, res, next) => {
   let payload = null;
   payload = jwt.verify(token, process.env.USER_VERIFICATION_TOKEN_SECRET);
   if (!payload) {
-    next(new AppError('link is not valid', 400));
+    return next(new AppError('link is not valid', 400));
   }
   const user = await User.findOne({ _id: payload.ID });
 
   if (!user) {
-    next(new AppError('user not found', 404));
+    return next(new AppError('user not found', 404));
   }
   user.verified = true;
   await user.save({ validateBeforeSave: false });

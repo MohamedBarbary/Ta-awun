@@ -29,7 +29,7 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
 
   const following = await Following.findById(req.params.id);
   if (!following)
-    return next(new AppError('no found following with this id'), 404);
+    return next(new AppError('no found following with this id',404));
   if (req.model.id !== following.userID.toString())
     return next(
       new AppError('You do not have permission to perform this action', 403)

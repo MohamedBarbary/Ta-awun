@@ -38,7 +38,7 @@ exports.deleteOne = (Model) =>
   catchAsyncErrors(async (req, res, next) => {
     const document = await Model.findByIdAndDelete(req.params.id);
     if (!document) {
-      new AppError('no document found with this data');
+      return next(new AppError('no document found with this data', 404));
     }
     res.status(204).json({
       status: 'success',
@@ -54,7 +54,7 @@ exports.getOne = (Model, popOptions) =>
     if (popOptions) query.populate(popOptions);
     const doc = await query;
     if (!doc) {
-      return next(new AppError('no doc found with this id'), 404);
+      return next(new AppError('no doc found with this id', 404));
     }
 
     res.status(200).json({
@@ -87,7 +87,7 @@ exports.updateOne = (Model, popOptions) =>
       runValidators: true,
     });
     if (!doc) {
-      return next(new AppError('no found document with this id'), 404);
+      return next(new AppError('no found document with this id', 404));
     }
     let populatedDocument = doc;
     if (popOptions) {
@@ -120,7 +120,7 @@ exports.addPhotosInfo = (Model, popOptions) =>
     let query = Model.findById(req.params.id);
     const doc = await query;
     if (!doc) {
-      return next(new AppError('no found document with this id'), 404);
+      return next(new AppError('no found document with this id', 404));
     }
     if (req.file) {
       doc.photos.push(req.file.filename);

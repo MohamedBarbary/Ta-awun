@@ -10,7 +10,8 @@ exports.createComment = catchAsyncErrors(async (req, res, next) => {
   const { content } = req.body;
   const prediction = await speechPrediction(content);
   console.log(prediction);
-  if (prediction === 1) next(new AppError('Hating Speech Not Allowing', 400));
+  if (prediction === 1)
+    return next(new AppError('Hating Speech Not Allowing', 400));
 
   const newDocument = await Comment.create(req.body);
   let populatedDocument = newDocument;
@@ -47,7 +48,7 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
     );
 
   const comment = await Comment.findById(req.params.id);
-  if (!comment) return next(new AppError('no found comment with this id'), 404);
+  if (!comment) return next(new AppError('no found comment with this id', 404));
   if (req.model.id !== comment.userID.toString())
     return next(
       new AppError('You do not have permission to perform this action', 403)

@@ -44,7 +44,7 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
 
   const donationCampaign = await DonationCampaign.findById(req.params.id);
   if (!donationCampaign)
-    return next(new AppError('no DonationCampaign found with this id'), 404);
+    return next(new AppError('no DonationCampaign found with this id',404));
 
   if (req.model.id === donationCampaign.userID.toString()) {
     return next();

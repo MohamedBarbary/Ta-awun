@@ -20,7 +20,7 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
     );
 
   const like = await Like.findById(req.params.id);
-  if (!like) return next(new AppError('no like found with this id'), 404);
+  if (!like) return next(new AppError('no like found with this id',404));
 
   if (req.model.id === like.userID.toString()) {
     return next();

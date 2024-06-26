@@ -99,7 +99,7 @@ exports.protectRoutes = (Model) =>
       token = req.headers.authorization.split(' ')[1];
     }
     if (!token) {
-      return next(new AppError('your are not logged in! please login '), 401);
+      return next(new AppError('your are not logged in! please login ', 401));
     }
     const decodedData = await promisify(jwt.verify)(
       token,
@@ -156,7 +156,7 @@ exports.updatePassword = (Model) =>
   catchAsyncError(async (req, res, next) => {
     const model = await Model.findById(req.model.id).select('+password');
     if (!model) {
-      return new AppError('no model found', 404);
+      return next(new AppError('no model found', 404));
     }
     if (
       !(await model.compareBcryptHashedCodes(
@@ -164,7 +164,7 @@ exports.updatePassword = (Model) =>
         model.password
       ))
     ) {
-      return next(new AppError('currentPassword is not correct'), 401);
+      return next(new AppError('currentPassword is not correct', 401));
     }
 
     model.password = req.body.password;

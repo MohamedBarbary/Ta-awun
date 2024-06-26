@@ -10,7 +10,8 @@ const popOptions = { path: 'userID', select: 'userName photoLink city' };
 exports.createPost = catchAsyncErrors(async (req, res, next) => {
   const { content } = req.body;
   const prediction = await speechPrediction(content);
-  if (prediction === 1) next(new AppError('Hating Speech Not Allowing', 400));
+  if (prediction === 1)
+    return next(new AppError('Hating Speech Not Allowing', 400));
 
   const newDocument = await Post.create(req.body);
   let populatedDocument = newDocument;
@@ -57,7 +58,7 @@ exports.isUserAuthorized = catchAsyncErrors(async (req, res, next) => {
     );
 
   const post = await Post.findById(req.params.id);
-  if (!post) return next(new AppError('no post found with this id'), 404);
+  if (!post) return next(new AppError('no post found with this id', 404));
 
   if (req.model.id === post.userID.toString()) {
     return next();
