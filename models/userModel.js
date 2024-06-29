@@ -68,10 +68,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
-    city: {
-      type: String,
-      required: [true, 'Please Enter your city!'],
-    },
+    city: String,
     birthDate: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
