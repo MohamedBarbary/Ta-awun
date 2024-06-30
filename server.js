@@ -19,6 +19,10 @@ const paymentRouter = require('./routes/paymentRouter');
 const AppError = require('./utils/appError');
 const connectDB = require('./utils/connectDB');
 const { app, server } = require('./socket/socket');
+const { protectRoutes } = require('../controller/userAuthController');
+const {
+  checkBlacklistTokens,
+} = require('../controller/builders/authBuilderController');
 
 dotenv.config();
 const PORT = process.env.PORT || 4003;
@@ -32,7 +36,21 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", 'https://js.stripe.com'],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", 'data:'],
+        connectSrc: ["'self'", 'https://api.stripe.com'],
+        frameSrc: ["'self'", 'https://js.stripe.com'],
+      },
+    },
+  })
+);
+
 const limiter = rateLimit({
   max: 400,
   windowMs: 60 * 60 * 1000,
@@ -54,7 +72,7 @@ app.use('/api/followings', followingRouter);
 app.use('/api/followers', followerRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/payments', paymentRouter);
-app.get('/donation-form', (req, res) => {
+app.get('/donation-form', protectRoutes, checkBlacklistTokens, (req, res) => {
   res.render('index');
 });
 app.all('*', (req, res, next) => {
