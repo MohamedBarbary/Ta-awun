@@ -41,7 +41,7 @@ donationForm.addEventListener('submit', async (event) => {
     console.log('Token created:', token);
 
     const response = await fetch(
-      'https://ta-awun.onrender.com/api/payments/payment',
+      'https://social-api-trlr.onrender.com/api/payments/payment',
       {
         method: 'POST',
         headers: {
