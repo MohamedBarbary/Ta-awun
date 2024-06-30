@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -21,6 +22,8 @@ const { app, server } = require('./socket/socket');
 
 dotenv.config();
 const PORT = process.env.PORT || 4003;
+
+app.use(cors());
 
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
