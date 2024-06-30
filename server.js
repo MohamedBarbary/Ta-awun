@@ -37,11 +37,7 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: [
-          "'self'",
-          'https://js.stripe.com',
-          "'sha256-d87519b26e3a66d43d806be073f5febb585f4a79e7c1d593214705968adce6dd'",
-        ],
+        scriptSrc: ["'self'", 'https://js.stripe.com'],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", 'data:'],
         connectSrc: ["'self'", 'https://api.stripe.com'],
