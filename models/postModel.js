@@ -11,7 +11,7 @@ const postSchema = new mongoose.Schema(
     content: {
       type: String,
       required: [true, 'Please add a content!'],
-      minLength: 15,
+      minLength: 8,
     },
     photos: {
       type: [String],
