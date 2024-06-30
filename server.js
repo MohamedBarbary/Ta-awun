@@ -54,6 +54,9 @@ app.use('/api/followings', followingRouter);
 app.use('/api/followers', followerRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/payments', paymentRouter);
+app.get('/donation-form', (req, res) => {
+  res.render('index');
+});
 app.all('*', (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl} on server!`, 404));
 });
