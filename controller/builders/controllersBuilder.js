@@ -39,7 +39,7 @@ exports.deleteOne = (Model) =>
     const document = await Model.findByIdAndDelete(req.params.id);
     if (!document)
       return next(new AppError('no document found with this data', 404));
-    res.status(204).json({
+    res.status(200).json({
       status: 'success',
       data: {
         document,
