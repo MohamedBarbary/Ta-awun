@@ -40,7 +40,7 @@ app.use(
         scriptSrc: [
           "'self'",
           'https://js.stripe.com',
-          "'ugZ2mvz06rWjwW5HVypBmOYs0T734JPBVrOxkmbjuyo='",
+          "'sha256-SEEe/ae+itIO2BJo3f4alCEU202AXSHgGyc75XxSkqg='",
         ],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", 'data:'],
