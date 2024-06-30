@@ -4,7 +4,6 @@ const dotenv = require('dotenv');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const path = require('path');
-const crypto = require('crypto');
 const mongoSanitize = require('express-mongo-sanitize');
 const rateLimit = require('express-rate-limit');
 const globalErrorHandler = require('./controller/errorController');
@@ -19,13 +18,7 @@ const messageRouter = require('./routes/messageRouter');
 const paymentRouter = require('./routes/paymentRouter');
 const AppError = require('./utils/appError');
 const connectDB = require('./utils/connectDB');
-
-const User = require('./models/userModel');
 const { app, server } = require('./socket/socket');
-const { protectRoutes } = require('./controller/userAuthController');
-const {
-  checkBlacklistTokens,
-} = require('./controller/builders/authBuilderController');
 
 dotenv.config();
 const PORT = process.env.PORT || 4003;
@@ -39,14 +32,16 @@ app.use((req, res, next) => {
   next();
 });
 
-const nonce = crypto.randomBytes(16).toString('base64');
-
 app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", 'https://js.stripe.com', `'nonce-${nonce}'`],
+        scriptSrc: [
+          "'self'",
+          'https://js.stripe.com',
+          "'ugZ2mvz06rWjwW5HVypBmOYs0T734JPBVrOxkmbjuyo='",
+        ],
         styleSrc: ["'self'", "'unsafe-inline'"],
         imgSrc: ["'self'", 'data:'],
         connectSrc: ["'self'", 'https://api.stripe.com'],
