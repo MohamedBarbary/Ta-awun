@@ -66,6 +66,12 @@
       const queryParams = getQueryParams();
       const jwtToken = queryParams['token'];
 
+      if (!jwtToken) {
+        console.error('Token is missing');
+        alert('Token is missing. Please obtain a valid token.');
+        return;
+      }
+
       donationForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
