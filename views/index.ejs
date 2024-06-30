@@ -32,15 +32,13 @@
   </head>
   <body>
     <form id="donation-form">
-      <label for="campaignId">Campaign ID:</label>
-      <input type="text" id="campaignId" name="campaignId" required />
+      <input type="hidden" id="campaignId" name="campaignId" />
       <label for="amount">Amount:</label>
       <input type="number" id="amount" name="amount" required />
       <label for="card-element">Credit or Debit Card:</label>
       <div id="card-element"></div>
       <button type="submit">Donate</button>
     </form>
-
-    <script src="js/donationForm.js"></script>
+    <script src="/js/donationForm.js"></script>
   </body>
 </html>

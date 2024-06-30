@@ -21,11 +21,13 @@ function getQueryParams() {
 
 const queryParams = getQueryParams();
 const jwtToken = queryParams['token'];
+const campaignId = queryParams['campaignId'];
+
+document.getElementById('campaignId').value = campaignId;
 
 donationForm.addEventListener('submit', async (event) => {
   event.preventDefault();
 
-  const campaignId = document.getElementById('campaignId').value;
   const amount = document.getElementById('amount').value;
 
   try {
