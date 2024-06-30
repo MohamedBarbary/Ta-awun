@@ -19,6 +19,8 @@ const messageRouter = require('./routes/messageRouter');
 const paymentRouter = require('./routes/paymentRouter');
 const AppError = require('./utils/appError');
 const connectDB = require('./utils/connectDB');
+
+const User = require('./models/userModel');
 const { app, server } = require('./socket/socket');
 const { protectRoutes } = require('./controller/userAuthController');
 const {
@@ -75,7 +77,7 @@ app.use('/api/followings', followingRouter);
 app.use('/api/followers', followerRouter);
 app.use('/api/messages', messageRouter);
 app.use('/api/payments', paymentRouter);
-app.get('/donation-form', protectRoutes, checkBlacklistTokens, (req, res) => {
+app.get('/donation-form', (req, res) => {
   const token = req.query.token;
   if (!token) {
     return res.status(400).send('Token is missing');
