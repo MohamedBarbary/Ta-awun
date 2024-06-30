@@ -77,7 +77,7 @@ app.get('/donation-form', (req, res) => {
   if (!token) {
     return res.status(400).send('Token is missing');
   }
-  res.render('index', { token, nonce });
+  res.render('index', { token });
 });
 app.all('*', (req, res, next) => {
   next(new AppError(`can't find ${req.originalUrl} on server!`, 404));
