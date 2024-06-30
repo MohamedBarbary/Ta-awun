@@ -44,7 +44,3 @@ exports.processPayment = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
-exports.paymentPage = catchAsyncError(async (req, res, next) => {
-  res.status(200).render('resetPassword');
-});
