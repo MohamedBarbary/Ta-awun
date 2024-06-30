@@ -40,10 +40,10 @@ exports.deleteUserPost = catchAsyncErrors(async (req, res, next) => {
     next(new AppError('no document found with this data'));
   }
   await Comment.deleteMany({ postID: req.params.id });
-  res.status(204).json({
+  res.status(200).json({
     status: 'success',
     data: {
-      document,
+      null,
     },
   });
 });
